@@ -6,13 +6,13 @@ public class PlayerMovement : MonoBehaviour
 {
     // Variables
     [SerializeField] private float movementSpeed = 10;
-    [SerializeField] private float jumpHeight = 60;
+    [SerializeField] private float jumpHeight = 0;
     [SerializeField] private LayerMask groundLayer;
     [SerializeField] private LayerMask wallLayer;
     private Rigidbody2D body;
     float horizontalInput;
     private Animator animator;
-    public float gravity = 3f;
+    public float gravity = 6f;
     private BoxCollider2D boxCollider2D;
     private float wallJumpCD;
     private float dashCD;
@@ -59,7 +59,23 @@ public class PlayerMovement : MonoBehaviour
             // Detect Spacebar to Jump
             if(Input.GetKey(KeyCode.Space))
             {
-                jump();
+                if(jumpHeight < 40 && !onWall()){
+                    jumpHeight += Time.deltaTime * 60;
+                    if(jumpHeight < 20){
+                        jumpHeight = 20;
+                    }
+                }else{
+                    jumpHeight = 60;
+                    jump();
+                    jumpHeight = 0;
+                }
+                
+            }
+            if(Input.GetKeyUp(KeyCode.Space)){
+                if(!onWall()){
+                    jump();
+                    jumpHeight = 0;
+                }
             }
 
         }else
