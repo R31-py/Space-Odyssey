@@ -36,7 +36,8 @@ public class PlayerAttack : MonoBehaviour
         EnemyController enemy = hasHit();
         if(enemy != null){
             enemy.lifePoints -= 1;
-            enemy.knockBack = transform.localScale.x * 3;
+            enemy.body.velocity = new Vector2(transform.localScale.x * 10, enemy.body.velocity.y);
+
         }
    }
 

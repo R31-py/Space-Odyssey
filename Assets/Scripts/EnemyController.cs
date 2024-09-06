@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class EnemyController : MonoBehaviour
 {
-    public float lifePoints = 4f;
-    public float knockBack = 0f;
-    [SerializeField] private Rigidbody2D body;
+    [SerializeField] public float lifePoints = 4f;
+    public Rigidbody2D body;
     private float spawnX;
     private int movingDirection = 1;
+    private float directionChange = 0f;
     private void Awake()
     {
         body = GetComponent<Rigidbody2D>();
@@ -18,18 +18,19 @@ public class EnemyController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(knockBack != 0){
-            body.velocity = new Vector2(knockBack, body.velocity.y);
-            knockBack = 0;
+        if(body.velocity.x == 0){
+            randomMoving();
         }
         if(lifePoints <= 0){
             Destroy(gameObject);
         }
-        randomMoving();
+        
     }
 
     void randomMoving(){
-        if(spawnX - transform.position.x > 3 || spawnX - transform.position.x < -3){
+        directionChange += Time.deltaTime;
+        if(directionChange > 1.5){
+            directionChange = 0;
             movingDirection *= -1;
         }
         body.velocity = new Vector2(movingDirection, body.velocity.y);

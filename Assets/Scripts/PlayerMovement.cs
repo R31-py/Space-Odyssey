@@ -6,7 +6,7 @@ public class PlayerMovement : MonoBehaviour
 {
     // Variables
     [SerializeField] private float movementSpeed = 10;
-    [SerializeField] private float jumpHeight = 40;
+    [SerializeField] private float jumpHeight = 60;
     [SerializeField] private LayerMask groundLayer;
     [SerializeField] private LayerMask wallLayer;
     private Rigidbody2D body;
@@ -16,6 +16,7 @@ public class PlayerMovement : MonoBehaviour
     private BoxCollider2D boxCollider2D;
     private float wallJumpCD;
     private float dashCD;
+    private float dashTimer;
 
     // Get components
     private void Awake()
@@ -66,11 +67,16 @@ public class PlayerMovement : MonoBehaviour
             wallJumpCD += Time.deltaTime;
         }
 
-        if(Input.GetKey(KeyCode.E) && dashCD > 2){
-            dash();
-            Debug.Log("Dashed");
+        if(Input.GetKey(KeyCode.E) && body.velocity.x != 0 && dashCD > 0.7f){
+            dashTimer = 0.15f;
         }else{
             dashCD += Time.deltaTime;
+        }
+        if(dashTimer > 0){
+            dash();
+            dashTimer -= Time.deltaTime;
+        }else{
+            dashTimer = 0;
         }
 
         // Update animation booleans
@@ -107,7 +113,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void dash()
     {
-        body.velocity = new Vector2(movementSpeed * 10 * transform.localScale.x, body.velocity.y);
+        body.velocity = new Vector2(movementSpeed * 4 * transform.localScale.x, body.velocity.y);
         dashCD = 0;
     }
     
