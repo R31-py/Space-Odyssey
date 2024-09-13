@@ -7,10 +7,10 @@ public class PlayerAttack : MonoBehaviour
     [SerializeField] private float attackCooldown;
     [SerializeField] private float attackReach;
     [SerializeField] private LayerMask enemyLayer;
-    private Animator animator;
     private PlayerMovement playerMovement;
     private float CDTimer = Mathf.Infinity;
     private BoxCollider2D boxCollider2D;
+    private Animator animator;
 
    private void Awake()
    {
