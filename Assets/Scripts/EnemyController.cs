@@ -6,33 +6,60 @@ public class EnemyController : MonoBehaviour
 {
     [SerializeField] public float lifePoints = 4f;
     public Rigidbody2D body;
-    private float spawnX;
     private int movingDirection = 1;
     private float directionChange = 0f;
+    [SerializeField]private Animator animator;
+    public bool playerDetected = false;
+    public bool canMove = false;
+    public float waitTime = .3f;
     private void Awake()
     {
         body = GetComponent<Rigidbody2D>();
-        spawnX = transform.position.x;
+        animator = GetComponent<Animator>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(body.velocity.x == 0){
-            randomMoving();
+        if (playerDetected)
+        {
+           waitTime -= Time.deltaTime;
+           if (waitTime <= 0)
+           {
+               canMove = true;
+           }
         }
-        if(lifePoints <= 0){
+        if (canMove)
+        {
+            body.velocity = new Vector2(-movingDirection, body.velocity.y);
+            animator.SetTrigger("Move");
+        }
+
+        if (lifePoints <= 0)
+        {
             Destroy(gameObject);
         }
-        
     }
-
-    void randomMoving(){
-        directionChange += Time.deltaTime;
-        if(directionChange > 1.5){
-            directionChange = 0;
-            movingDirection *= -1;
+ 
+    void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.tag == "Player")
+        {
+            if (!playerDetected)
+            {
+                animator.SetTrigger("Detected");
+                playerDetected = true;
+            }
+            if (collision.gameObject.transform.position.x > transform.position.x)
+            {
+                transform.localScale = new Vector3(-1, 1, 1);
+                movingDirection = -1;
+            }
+            else
+            {
+                transform.localScale = new Vector3(1, 1, 1);
+                movingDirection = 1;
+            }
         }
-        body.velocity = new Vector2(movingDirection, body.velocity.y);
     }
 }
