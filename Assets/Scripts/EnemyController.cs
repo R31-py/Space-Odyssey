@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,8 +6,10 @@ using UnityEngine;
 public class EnemyController : MonoBehaviour
 {
     [SerializeField] public float lifePoints = 4f;
+    [SerializeField] public PlayerValues player;
     public Rigidbody2D body;
     private int movingDirection = 1;
+    private float hitCooldown = 1f;
     private float directionChange = 0f;
     [SerializeField]private Animator animator;
     public bool playerDetected = false;
@@ -39,6 +42,11 @@ public class EnemyController : MonoBehaviour
         {
             Destroy(gameObject);
         }
+        
+        if (hitCooldown < 1f)
+        {
+            hitCooldown += Time.deltaTime;
+        }
     }
  
     void OnTriggerEnter2D(Collider2D collision)
@@ -61,5 +69,23 @@ public class EnemyController : MonoBehaviour
                 movingDirection = 1;
             }
         }
+        
     }
+    
+    private void OnCollisionStay2D(Collision2D other)
+    {
+        if (other.gameObject.tag == "Player" && hitCooldown >= 1f)
+        {
+            Debug.Log(hitCooldown);
+            player.health -= 1;
+            hitCooldown = 0f;
+        }
+
+        if (other.gameObject.tag == "Wall")
+        {
+            movingDirection *= -1;
+            transform.localScale = new Vector3(movingDirection, 1, 1);
+        }
+    }
+
 }
