@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,7 +7,7 @@ public class PlayerMovement : MonoBehaviour
 {
     // Variables
     [SerializeField] private float movementSpeed = 10;
-    [SerializeField] private float jumpHeight = 0;
+    [SerializeField] private float maxJumpHeight = 0;
     [SerializeField] private LayerMask groundLayer;
     [SerializeField] private LayerMask wallLayer;
     private Rigidbody2D body;
@@ -17,6 +18,8 @@ public class PlayerMovement : MonoBehaviour
     private float wallJumpCD;
     private float dashCD;
     private float dashTimer;
+    private float jumpHeight = 0;
+
 
     // Get components
     private void Awake()
@@ -59,29 +62,19 @@ public class PlayerMovement : MonoBehaviour
             // Detect Spacebar to Jump
             if(Input.GetKey(KeyCode.Space))
             {
-                if(jumpHeight < 40 && !onWall()){
-                    jumpHeight += Time.deltaTime * 60;
-                    if(jumpHeight < 20){
-                        jumpHeight = 20;
-                    }
-                }else{
-                    jumpHeight = 60;
-                    jump();
-                    jumpHeight = 0;
-                }
-                
-            }
-            if(Input.GetKeyUp(KeyCode.Space)){
-                if(!onWall()){
-                    jump();
-                    jumpHeight = 0;
-                }
+                jump();
+                Debug.Log(jumpHeight);
             }
 
+            if (Input.GetKeyUp(KeyCode.Space))
+            {
+                jumpHeight = maxJumpHeight + 1;
+            }
         }else
         {
             wallJumpCD += Time.deltaTime;
         }
+        
 
         if(Input.GetKey(KeyCode.E) && body.velocity.x != 0 && dashCD > 0.7f){
             dashTimer = 0.15f;
@@ -95,6 +88,11 @@ public class PlayerMovement : MonoBehaviour
             dashTimer = 0;
         }
 
+        if (isGroundedValue)
+        {
+            jumpHeight = 0;
+        }
+
         // Update animation booleans
         animator.SetBool("isMoving", horizontalInput != 0);
         animator.SetBool("isGrounded", isGroundedValue);
@@ -104,10 +102,23 @@ public class PlayerMovement : MonoBehaviour
     private void jump()
     {
         bool isGroundedValue = isGrounded();
-
-        if(isGroundedValue)
+        if (isGroundedValue)
         {
-            body.velocity = new Vector2(body.velocity.x, jumpHeight / gravity);
+            jumpHeight = 0;
+        }
+
+        if(jumpHeight < maxJumpHeight)
+        {
+            jumpHeight += 1;
+            if (jumpHeight < 10)
+            {
+                body.velocity = new Vector2(body.velocity.x, 5);
+            }
+            else
+            {
+                body.velocity = new Vector2(body.velocity.x, 10);
+            }
+            
             animator.SetTrigger("Jump");  
 
         }
