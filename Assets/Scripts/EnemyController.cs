@@ -15,6 +15,7 @@ public class EnemyController : MonoBehaviour
     public bool playerDetected = false;
     public bool canMove = false;
     public float waitTime = .3f;
+    public float deathTimer = 3f;
     private void Awake()
     {
         body = GetComponent<Rigidbody2D>();
@@ -40,7 +41,11 @@ public class EnemyController : MonoBehaviour
 
         if (lifePoints <= 0)
         {
-            Destroy(gameObject);
+            animator.SetTrigger("Death");
+            canMove = false;
+            deathTimer -= Time.deltaTime;
+            if (deathTimer <= 0)
+                Destroy(gameObject);
         }
         
         if (hitCooldown < 1f)
@@ -77,6 +82,7 @@ public class EnemyController : MonoBehaviour
         if (other.gameObject.tag == "Player" && hitCooldown >= 1f)
         {
             Debug.Log(hitCooldown);
+            animator.SetTrigger("Attack");
             player.health -= 1;
             hitCooldown = 0f;
         }
