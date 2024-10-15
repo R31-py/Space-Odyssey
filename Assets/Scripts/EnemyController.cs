@@ -11,6 +11,7 @@ public class EnemyController : MonoBehaviour
     private int movingDirection = 1;
     private float hitCooldown = 1f;
     private float directionChange = 0f;
+    private float speed = 1f;
     [SerializeField]private Animator animator;
     public bool playerDetected = false;
     public bool canMove = false;
@@ -35,7 +36,7 @@ public class EnemyController : MonoBehaviour
         }
         if (canMove)
         {
-            body.velocity = new Vector2(-movingDirection, body.velocity.y);
+            body.velocity = new Vector2(-movingDirection * speed, body.velocity.y);
             animator.SetTrigger("Move");
         }
 
@@ -58,6 +59,7 @@ public class EnemyController : MonoBehaviour
     {
         if (collision.gameObject.tag == "Player")
         {
+            speed = 3f;
             if (!playerDetected)
             {
                 animator.SetTrigger("Detected");
@@ -73,6 +75,10 @@ public class EnemyController : MonoBehaviour
                 transform.localScale = new Vector3(1, 1, 1);
                 movingDirection = 1;
             }
+        }
+        else
+        {
+            speed = 1f;
         }
         
     }

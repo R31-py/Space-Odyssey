@@ -12,14 +12,24 @@ public class PlayerPickUp : MonoBehaviour
     [SerializeField] private Canvas textCanvas;
     [SerializeField] private BoxCollider2D boxCollider2D;
     [SerializeField] private LayerMask layer;
-
+    private PlayerValues playerValues;
+    private bool isPressed;
     private void Start()
     {
      boxCollider2D = GetComponent<BoxCollider2D>();
+     playerValues = GetComponent<PlayerValues>();
     }
 
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.A))
+        {
+            isPressed = true;
+        }
+        else
+        {
+            isPressed = false;
+        }
         detect();
     }
 
@@ -30,6 +40,14 @@ public class PlayerPickUp : MonoBehaviour
         {
             gameTexts.text = "Press A to pick up";
             textCanvas.gameObject.SetActive(true);
+            if (raycastHit.collider.gameObject.tag == "Health-Item" && isPressed)
+            {
+                if (playerValues.health < playerValues.maxHealth)
+                {
+                    playerValues.health++;
+                    Destroy(raycastHit.collider.gameObject);
+                }
+            }
         }
         else
         {
