@@ -19,6 +19,7 @@ public class PlayerMovement : MonoBehaviour
     private float dashCD;
     private float dashTimer;
     private float jumpHeight = 0;
+    private bool secondJump = false;
 
 
     // Get components
@@ -57,6 +58,13 @@ public class PlayerMovement : MonoBehaviour
             }else
             {
                 body.gravityScale = 3;
+            }
+
+            if (Input.GetKeyDown(KeyCode.Space) && !secondJump && !isGroundedValue)
+            {
+                jumpHeight = 10;
+                secondJump = true;
+                Debug.Log("Second Jumped");                
             }
             
             // Detect Spacebar to Jump
@@ -105,6 +113,7 @@ public class PlayerMovement : MonoBehaviour
         if (isGroundedValue)
         {
             jumpHeight = 0;
+            secondJump = false;
         }
 
         if(jumpHeight < maxJumpHeight)

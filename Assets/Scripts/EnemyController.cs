@@ -17,6 +17,7 @@ public class EnemyController : MonoBehaviour
     public bool canMove = false;
     public float waitTime = .3f;
     public float deathTimer = 3f;
+    private float pushDistance = 0f;
     private void Awake()
     {
         body = GetComponent<Rigidbody2D>();
@@ -26,6 +27,7 @@ public class EnemyController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
         if (playerDetected)
         {
            waitTime -= Time.deltaTime;
@@ -52,6 +54,12 @@ public class EnemyController : MonoBehaviour
         if (hitCooldown < 1f)
         {
             hitCooldown += Time.deltaTime;
+        }
+        if (pushDistance > 0f)
+        {
+            body.velocity = new Vector2(pushDistance * 30, body.velocity.y);
+            pushDistance -= Time.deltaTime * (pushDistance/Mathf.Abs(pushDistance));  
+            Debug.Log("Pushing Back");
         }
     }
  
@@ -98,6 +106,11 @@ public class EnemyController : MonoBehaviour
             movingDirection *= -1;
             transform.localScale = new Vector3(movingDirection, 1, 1);
         }
+    }
+
+    public void pushBack(float d)
+    {
+        pushDistance = d;
     }
 
 }

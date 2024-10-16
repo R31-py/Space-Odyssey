@@ -58,7 +58,7 @@ public class Ability : MonoBehaviour
         {
             // Apply damage to the enemy
             enemy.lifePoints -= damage;
-            enemy.body.velocity = new Vector2(transform.localScale.x * 10, enemy.body.velocity.y); // Push back effect
+            enemy.pushBack(.3f * transform.localScale.x);
         }
         else
         {
