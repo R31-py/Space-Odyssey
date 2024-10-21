@@ -14,6 +14,7 @@ public class PlayerValues : MonoBehaviour
     void Start()
     {
         oldHealth = health;
+        damageParticle.playbackSpeed = 6.5f;
     }
 
     // Update is called once per frame
@@ -23,6 +24,11 @@ public class PlayerValues : MonoBehaviour
         {
             Debug.Log("Play damageParticle");
             damageParticle.Play();
+            oldHealth = health;
+        }
+        else
+        {
+            damageParticle.Stop();
         }
         if (health <= 0)
         {
