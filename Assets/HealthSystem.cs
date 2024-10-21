@@ -37,7 +37,7 @@ public class HealthSystem : MonoBehaviour
             else
             {
                 healthPoints[i].SetActive(false);
-            }
+           }
         }
     }
 }
