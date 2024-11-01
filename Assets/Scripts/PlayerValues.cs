@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerValues : MonoBehaviour
@@ -9,12 +10,14 @@ public class PlayerValues : MonoBehaviour
     [SerializeField] public int maxHealth;
     [SerializeField] public GameObject player;
     [SerializeField] private GameObject message;
+    /*[SerializeField] private GameObject damageParticles;
+     Provo me e ba si prefab e jo particle system*/
     
     public ParticleSystem damageParticle;
     void Start()
     {
         oldHealth = health;
-        damageParticle.playbackSpeed = 6.5f;
+        
     }
 
     // Update is called once per frame
