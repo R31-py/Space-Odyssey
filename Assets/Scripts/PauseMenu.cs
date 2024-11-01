@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 public class PauseMenu : MonoBehaviour
 {
@@ -17,7 +18,7 @@ public class PauseMenu : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             //if pause menu already running unpause
-           if (pauseMenu.activeInHierarchy)
+            if (pauseMenu.activeInHierarchy)
             {
                 pauseGame(false);
             }
@@ -25,7 +26,7 @@ public class PauseMenu : MonoBehaviour
             {
                 pauseGame(true);
             }
-           Debug.Log("Escape");
+            Debug.Log("Escape");
             
         }
     }
@@ -44,4 +45,5 @@ public class PauseMenu : MonoBehaviour
             Time.timeScale = 1;
         }
     }
+    
 }
