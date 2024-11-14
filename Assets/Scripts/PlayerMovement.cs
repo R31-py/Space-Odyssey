@@ -41,9 +41,9 @@ public class PlayerMovement : MonoBehaviour
         
         // Sprite facing direction
         if(horizontalInput > 0.01f){
-            transform.localScale = Vector3.one;
+            transform.localScale = new Vector3(Math.Abs(transform.localScale.x), transform.localScale.y, transform.localScale.z);
         }else if(horizontalInput < -0.01f){
-            transform.localScale = new Vector3(-1, 1, 1);
+            transform.localScale = new Vector3(Math.Abs(transform.localScale.x) * -1, transform.localScale.y, transform.localScale.z);
         }
         
         if(wallJumpCD > 0.2f)
@@ -64,14 +64,13 @@ public class PlayerMovement : MonoBehaviour
             {
                 jumpHeight = 10;
                 secondJump = true;
-                Debug.Log("Second Jumped");                
+                animator.SetTrigger("Jump");
             }
             
             // Detect Spacebar to Jump
             if(Input.GetKey(KeyCode.Space))
             {
                 jump();
-                Debug.Log(jumpHeight);
             }
 
             if (Input.GetKeyUp(KeyCode.Space))
@@ -118,6 +117,8 @@ public class PlayerMovement : MonoBehaviour
 
         if(jumpHeight < maxJumpHeight)
         {
+            if(jumpHeight == 0)
+                animator.SetTrigger("Jump");  
             jumpHeight += 1;
             if (jumpHeight < 10)
             {
@@ -128,8 +129,6 @@ public class PlayerMovement : MonoBehaviour
                 body.velocity = new Vector2(body.velocity.x, 10);
             }
             
-            animator.SetTrigger("Jump");  
-
         }
         else if (onWall() && !isGroundedValue)
         {
