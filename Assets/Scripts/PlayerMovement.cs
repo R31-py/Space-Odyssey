@@ -10,9 +10,10 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float maxJumpHeight = 0;
     [SerializeField] private LayerMask groundLayer;
     [SerializeField] private LayerMask wallLayer;
+    [SerializeField] private Animator animator;
+
     private Rigidbody2D body;
     float horizontalInput;
-    private Animator animator;
     public float gravity = 6f;
     private BoxCollider2D boxCollider2D;
     private float wallJumpCD;
@@ -26,7 +27,6 @@ public class PlayerMovement : MonoBehaviour
     private void Awake()
     {
         body = GetComponent<Rigidbody2D>();
-        animator = GetComponent<Animator>();
         boxCollider2D = GetComponent<BoxCollider2D>();
     }
 
