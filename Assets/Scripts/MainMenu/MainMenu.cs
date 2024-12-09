@@ -3,19 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class StartGame : MonoBehaviour
+public class MainMenu : MonoBehaviour
 {
 
-    public void startGame()
+    public void StartGame()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
-    
-    void Update()
+
+    public void QuitGame()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            startGame();
-        }
+        Debug.Log("Quit");
+        Application.Quit();
     }
 }
