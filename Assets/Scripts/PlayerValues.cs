@@ -10,14 +10,20 @@ public class PlayerValues : MonoBehaviour
     [SerializeField] public int maxHealth;
     [SerializeField] public GameObject player;
     [SerializeField] private GameObject message;
-    /*[SerializeField] private GameObject damageParticles;
-     Provo me e ba si prefab e jo particle system*/
-    
     public ParticleSystem damageParticle;
+    
+    public KeyCode RIGHT = KeyCode.RightArrow;
+    public KeyCode LEFT = KeyCode.LeftArrow;
+    public KeyCode DASH = KeyCode.E;
+    public KeyCode JUMP = KeyCode.Space;
+    public KeyCode FIGHT = KeyCode.Z;
+    
+    // Tutorial Variables
+    [SerializeField] public int tutorialStage = 0;
+    
     void Start()
     {
         oldHealth = health;
-        
     }
 
     // Update is called once per frame
