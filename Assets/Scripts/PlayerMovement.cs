@@ -41,7 +41,7 @@ public class PlayerMovement : MonoBehaviour
         // Sprite facing direction
         if (playerValues.tutorialStage >= 0)
         {
-            if(horizontalInput != 0){}
+            if(horizontalInput != 0)
                 transform.localScale = new Vector3(Math.Abs(transform.localScale.x) * (horizontalInput / Math.Abs(horizontalInput)), transform.localScale.y, transform.localScale.z);
         }
 
