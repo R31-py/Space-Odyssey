@@ -39,10 +39,10 @@ public class AbilitySlot : MonoBehaviour
     {
         isOnCooldown = true;
         // Disable the ability (dim the icon, etc.)
-        abilityIcon.color = new Color(1, 1, 1, 0.5f); // Make the icon semi-transparent
+        //abilityIcon.color = new Color(1, 1, 1, 0.5f); // Make the icon semi-transparent
         yield return new WaitForSeconds(cooldownTime);
         // Re-enable the ability
-        abilityIcon.color = new Color(1, 1, 1, 1f);  // Reset icon opacity
+        //abilityIcon.color = new Color(1, 1, 1, 1f);  // Reset icon opacity
         isOnCooldown = false;
     }
 }
