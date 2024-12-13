@@ -58,6 +58,7 @@ public class Ability : MonoBehaviour
         {
             // Apply damage to the enemy
             enemy.lifePoints -= damage;
+            enemy.animator.SetTrigger("onHitTrig");
             enemy.pushBack(.3f * transform.localScale.x);
         }
         else

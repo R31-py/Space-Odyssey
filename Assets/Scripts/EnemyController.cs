@@ -12,7 +12,7 @@ public class EnemyController : MonoBehaviour
     private float hitCooldown = 1f;
     private float directionChange = 0f;
     private float speed = 1f;
-    [SerializeField]private Animator animator;
+    [SerializeField]public Animator animator;
     public bool playerDetected = false;
     public bool canMove = false;
     public float waitTime = .3f;
