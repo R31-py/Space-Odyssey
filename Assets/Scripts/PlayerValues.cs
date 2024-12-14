@@ -29,10 +29,22 @@ public class PlayerValues : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        
+        if (Input.GetKeyDown(JUMP))
+        {
+            SoundManager.Instance.PlaySound2D("player_Jump");
+        }
+        
+        if (Input.GetKeyDown(FIGHT))
+        {
+            SoundManager.Instance.PlaySound2D("player_Slash");
+        }
+        
         if (oldHealth > health)
         {
             Debug.Log("Play damageParticle");
             damageParticle.Play();
+            SoundManager.Instance.PlaySound2D("player_Hurt");
             oldHealth = health;
         }
         else

@@ -13,7 +13,7 @@ public class Message : MonoBehaviour
     public GameObject helper;
     public String[] messages =
     {
-        "Hello hero! I am THE HELPER! \n  I am going to assist you and teach you the true universal warrior ways!",
+        "Hello hero! I am THE HELPER! \n  I am going to assist you and teach you the true universal warrior ways! \n Right Click to continue",
         "First you need to learn how to move! Use the right arrow key to get to the star!",
         "Great! Now use the left arrow key to get to the star!",
         "You sure learn fast! \n Use the space key to jump! If you press it twice you will perform a double jump",
@@ -35,7 +35,7 @@ public class Message : MonoBehaviour
             if (show)
             {
                 Time.timeScale = 0;
-                if (Input.GetKeyDown(KeyCode.Space))
+                if (Input.GetKeyDown(KeyCode.Mouse0))
                 {
                     if (text.text == messages[0])
                     {
