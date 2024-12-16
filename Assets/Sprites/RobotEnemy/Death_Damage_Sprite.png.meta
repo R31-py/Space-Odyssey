@@ -33,7 +33,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 1
+    filterMode: 0
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -42,12 +42,12 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 1
+  spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 100
+  spritePixelsToUnits: 1100
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -70,7 +70,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 1
+    textureCompression: 0
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -89,21 +89,177 @@ TextureImporter:
     overridden: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
-  - serializedVersion: 3
-    buildTarget: WebGL
-    maxTextureSize: 2048
-    resizeAlgorithm: 0
-    textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    overridden: 0
-    androidETC2FallbackOverride: 0
-    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
-    sprites: []
+    sprites:
+    - serializedVersion: 2
+      name: Death_Damage_Sprite_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 2830
+        width: 2887
+        height: 2830
+      alignment: 9
+      pivot: {x: 0.54684526, y: 0.9151652}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1bed20065793d674ba5da0d85e7c34ef
+      internalID: 476720514
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Death_Damage_Sprite_1
+      rect:
+        serializedVersion: 2
+        x: 2887
+        y: 2830
+        width: 2887
+        height: 2830
+      alignment: 9
+      pivot: {x: 0.5614845, y: 0.92113876}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3a3b5f41c95a6ec41bf2856473e39831
+      internalID: 887627745
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Death_Damage_Sprite_2
+      rect:
+        serializedVersion: 2
+        x: 5774
+        y: 2830
+        width: 2887
+        height: 2830
+      alignment: 9
+      pivot: {x: 0.57026786, y: 0.9151652}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 40beb8063da58a94e8e11bcb26d8de76
+      internalID: -862613805
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Death_Damage_Sprite_3
+      rect:
+        serializedVersion: 2
+        x: 8661
+        y: 2830
+        width: 2887
+        height: 2830
+      alignment: 9
+      pivot: {x: 0.5849072, y: 0.918152}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: dfeea7ab2e37d5041bba1d001e00a8d7
+      internalID: -33815273
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Death_Damage_Sprite_4
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 2887
+        height: 2830
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 492aa226cc397034692e58a5ae5e9df9
+      internalID: -178532148
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Death_Damage_Sprite_5
+      rect:
+        serializedVersion: 2
+        x: 2887
+        y: 0
+        width: 2887
+        height: 2830
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2306406eda237ac4eb9999e7ad3f6a33
+      internalID: -1828258725
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Death_Damage_Sprite_6
+      rect:
+        serializedVersion: 2
+        x: 5774
+        y: 0
+        width: 2887
+        height: 2830
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d664a8101ef131b4aada9e19ab85def7
+      internalID: -506844864
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Death_Damage_Sprite_7
+      rect:
+        serializedVersion: 2
+        x: 8661
+        y: 0
+        width: 2887
+        height: 2830
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fa60170fafff5bf4da5b22ff6918df13
+      internalID: -687189922
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape: []
     bones: []
@@ -114,7 +270,15 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      Death_Damage_Sprite_0: 476720514
+      Death_Damage_Sprite_1: 887627745
+      Death_Damage_Sprite_2: -862613805
+      Death_Damage_Sprite_3: -33815273
+      Death_Damage_Sprite_4: -178532148
+      Death_Damage_Sprite_5: -1828258725
+      Death_Damage_Sprite_6: -506844864
+      Death_Damage_Sprite_7: -687189922
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0
