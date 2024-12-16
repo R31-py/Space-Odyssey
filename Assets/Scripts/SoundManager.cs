@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 //Diese Klasse wird nach dem Singleton-Design-Pattern erstellt
 public class SoundManager : MonoBehaviour
 {
-    public static SoundManager Instance { get; private set; }
+    public static SoundManager Instance;
     
     [SerializeField] private SoundLibrary sfxLibrary;
     

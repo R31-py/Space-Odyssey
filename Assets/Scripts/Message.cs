@@ -55,6 +55,5 @@ public class Message : MonoBehaviour
                 Time.timeScale = 1;
             }
             canvas.SetActive(show);
-
     }
 }
