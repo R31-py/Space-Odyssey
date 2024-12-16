@@ -50,9 +50,6 @@ public class Message : MonoBehaviour
                         text.text = messages[6];
                     }
                 }
-            }else
-            {
-                Time.timeScale = 1;
             }
             canvas.SetActive(show);
     }

@@ -8,6 +8,7 @@ public class PauseMenu : MonoBehaviour
 {
     [SerializeField] private GameObject pauseMenu;
     [SerializeField] private TimeManager timeManager;
+    public Message message;
     private void Awake()
     {
         Debug.Log("PauseMenu Awake");
@@ -16,7 +17,7 @@ public class PauseMenu : MonoBehaviour
 
     private void Update()
     {
-        if (FindObjectOfType<Message>()?.isMessageActive == true)
+        if (message.show)
         {
             // Verhindere, dass Pause aktiviert wird, wenn Nachrichten aktiv sind
             return;
@@ -26,11 +27,14 @@ public class PauseMenu : MonoBehaviour
             //if pause menu already running unpause
             if (pauseMenu.activeInHierarchy)
             {
-                timeManager.PauseGame();
+                timeManager.ResumeGame();
+                pauseMenu.SetActive(false);
             }
             else
             {
+                pauseMenu.SetActive(true);
                 timeManager.PauseGame();
+                
             }
             Debug.Log("Escape");
             

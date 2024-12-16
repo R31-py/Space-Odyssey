@@ -4,12 +4,14 @@ using UnityEngine;
 
 public class TimeManager : MonoBehaviour
 {
-    private static int pauseCounter = 0;
+    private  int pauseCounter = 0;
 
     public void  PauseGame()
     {
         pauseCounter++;
         Time.timeScale = 0;
+        Debug.Log(pauseCounter);
+
     }
 
     public void  ResumeGame()
