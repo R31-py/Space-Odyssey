@@ -42,15 +42,15 @@ public class EnemyController : MonoBehaviour
             animator.SetTrigger("Move");
         }
 
-        if (lifePoints <= 0)
-        {
-            animator.SetTrigger("Death");
-            canMove = false;
-            deathTimer -= Time.deltaTime;
-            if (deathTimer <= 0)
-                Destroy(gameObject);
-        }
-        
+            if (lifePoints <= 0)
+            {
+                animator.SetTrigger("Death");
+                canMove = false;
+                deathTimer -= Time.deltaTime;
+                if (deathTimer <= 0)
+                    Destroy(gameObject);
+            }
+            
         if (hitCooldown < 1f)
         {
             hitCooldown += Time.deltaTime;

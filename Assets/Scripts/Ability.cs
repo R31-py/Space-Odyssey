@@ -53,21 +53,28 @@ public class Ability : MonoBehaviour
             return;
         }
 
-        EnemyController enemy = HasHit();
+        Collider2D enemy = HasHit();
         if (enemy != null)
         {
-            // Apply damage to the enemy
-            enemy.lifePoints -= damage;
-            enemy.animator.SetTrigger("onHitTrig");
-            enemy.pushBack(.3f * transform.localScale.x);
-        }
-        else
-        {
-            Debug.Log("No enemy hit detected.");
+            if (enemy.GetComponent<EnemyController>() != null)
+            {
+                EnemyController e = enemy.GetComponent<EnemyController>();
+                // Apply damage to the enemy
+                e.lifePoints -= damage;
+                e.animator.SetTrigger("onHitTrig");
+                e.pushBack(.3f * transform.localScale.x);
+            }
+            if(enemy.GetComponent<RobotutController>() != null)
+            {
+                Debug.Log("Po mret");
+                RobotutController rb = enemy.GetComponent<RobotutController>();
+                rb.lifePoints -= 1;
+                rb.damage();
+            } 
         }
     }
 
-    private EnemyController HasHit()
+    private Collider2D HasHit()
     {
         if (boxCollider2D == null)
         {
@@ -79,7 +86,7 @@ public class Ability : MonoBehaviour
         RaycastHit2D raycastHit = Physics2D.BoxCast(boxCollider2D.bounds.center, boxCollider2D.bounds.size, 0, new Vector2(transform.localScale.x, 0), range, enemyLayer);
         if (raycastHit.collider != null)
         {
-            EnemyController enemyController = raycastHit.collider.GetComponent<EnemyController>();
+            Collider2D enemyController = raycastHit.collider;
             if (enemyController != null)
             {
                 return enemyController;
