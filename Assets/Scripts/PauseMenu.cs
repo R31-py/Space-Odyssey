@@ -8,51 +8,47 @@ public class PauseMenu : MonoBehaviour
 {
     [SerializeField] private GameObject pauseMenu;
     [SerializeField] private TimeManager timeManager;
+    [SerializeField] private HideCursor hideCursor; 
     public Message message;
+
     private void Awake()
     {
-        Debug.Log("PauseMenu Awake");
         pauseMenu.SetActive(false);
     }
 
     private void Update()
     {
-        if (message.show)
+        if (message != null && message.show)
         {
-            // Verhindere, dass Pause aktiviert wird, wenn Nachrichten aktiv sind
+            // Prevent pausing when messages are active
             return;
         }
+
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            //if pause menu already running unpause
-            if (pauseMenu.activeInHierarchy)
-            {
-                timeManager.ResumeGame();
-                pauseMenu.SetActive(false);
-            }
-            else
-            {
-                pauseMenu.SetActive(true);
-                timeManager.PauseGame();
-                
-            }
-            Debug.Log("Escape");
-            
+            TogglePause();
         }
     }
-    
+
+    private void TogglePause()
+    {
+        bool isPaused = !pauseMenu.activeInHierarchy;
+        pauseGame(isPaused);
+    }
+
     public void pauseGame(bool status)
     {
-        Debug.Log("Pause status: " + status);
         pauseMenu.SetActive(status);
-
+        
         if (status)
         {
-            Time.timeScale = 0;
+            timeManager.PauseGame();
+            hideCursor.SetCursorState(true, CursorLockMode.None); // Show cursor
         }
         else
         {
-            Time.timeScale = 1;
+            timeManager.ResumeGame();
+            hideCursor.SetCursorState(false, CursorLockMode.Locked); // Hide cursor
         }
     }
 

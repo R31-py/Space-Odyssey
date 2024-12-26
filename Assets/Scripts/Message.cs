@@ -35,7 +35,7 @@ public class Message : MonoBehaviour
             if (show)
             {
                 Time.timeScale = 0;
-                if (Input.GetKeyDown(KeyCode.Mouse0))
+                if (Input.GetKeyDown(KeyCode.Mouse0) || Input.GetKeyDown(KeyCode.Return))
                 {
                     if (text.text == messages[0])
                     {
