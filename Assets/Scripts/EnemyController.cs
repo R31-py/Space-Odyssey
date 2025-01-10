@@ -48,7 +48,9 @@ public class EnemyController : MonoBehaviour
                 canMove = false;
                 deathTimer -= Time.deltaTime;
                 if (deathTimer <= 0)
+                {
                     Destroy(gameObject);
+                }
             }
             
         if (hitCooldown < 1f)

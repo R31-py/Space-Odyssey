@@ -8,6 +8,7 @@ TagManager:
   - Wall
   - Health-Item
   - Border
+  - PlayerInvisible
   layers:
   - Default
   - TransparentFX
