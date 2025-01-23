@@ -6,7 +6,6 @@ using UnityEngine;
 public class Invisibility : MonoBehaviour
 {
     public GameObject invisibilityIndicator;
-    public ParticleSystem particleSystem;
     
     // Start is called before the first frame update
     void Start()
@@ -18,6 +17,5 @@ public class Invisibility : MonoBehaviour
     {
         gameObject.tag = "PlayerInvisible";
         invisibilityIndicator.SetActive(true);
-        particleSystem.Play();
     }
 }
