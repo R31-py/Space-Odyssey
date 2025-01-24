@@ -54,7 +54,7 @@ public class PlayerValues : MonoBehaviour
         if (health <= 0)
         {
             message.SetActive(true);
-            player.SetActive(false);
+            player.SetActive(false);    
         }
     }
 }
