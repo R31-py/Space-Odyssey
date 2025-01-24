@@ -4,48 +4,82 @@ using UnityEngine;
 
 public class FloidController : MonoBehaviour, IEnemy
 {
+    [SerializeField] public float lifePoints = 4f;
+    public float deathTimer = 3f;
+    
+    [SerializeField] private GameObject FloidLaser;
+    [SerializeField] private Transform firePoint;
     [SerializeField] private float speed = 2f;
+    
     [SerializeField] private float attackCooldown = 1.5f;
+    private float attackTimer = 0f;
+
     [SerializeField]public Animator animator;
     public Rigidbody2D body;
+    public bool canMove = true;
     private int movingDirection = 1;
-    private float attackTimer = 0f;
+    
     private Transform playerTransform;
     private bool playerDetected = false;
 
     private void Start()
     {
-        body = GetComponent<Rigidbody2D>();
         
-        // Spieler-Referenz finden, vorausgesetzt, der Spieler hat das Tag "Player"
-        GameObject player = GameObject.FindGameObjectWithTag("Player");
-        if (player != null)
-        {
-            playerTransform = player.transform;
-        }
     }
 
     private void Update()
     {
-        Move(); // Bewegung ausführen, wenn der Spieler entdeckt wurde
+        Move(); 
+        
+        if (playerDetected)
+        {
+            attackTimer -= Time.deltaTime;
+            if (attackTimer <= 0)
+            {
+                Attack(); 
+                attackTimer = attackCooldown;
+            }
+        }
+        
+        if (lifePoints <= 0)
+        {
+            animator.SetTrigger("Death");
+            canMove = false;
+            deathTimer -= Time.deltaTime;
+            if (deathTimer <= 0)
+            {
+                Destroy(gameObject);
+            }
+        }
     }
 
     public void Attack()
     {
-        Debug.Log($"{gameObject.name} greift an!");
-        // Hier kannst du Schaden an den Spieler zufügen
-        // Zum Beispiel:
-        // if (playerTransform != null) playerTransform.GetComponent<PlayerValues>()?.TakeDamage(damage);
+        Debug.Log($"{gameObject.name} attacked!");
+        Vector2 direction = (playerTransform.position - firePoint.position).normalized;
+        GameObject laser = Instantiate(FloidLaser, firePoint.position, Quaternion.identity);
+        Rigidbody2D laserRb = laser.GetComponent<Rigidbody2D>();
+        laserRb.velocity = direction * 10f;
+        animator.SetTrigger("attack");
     }
 
     public void Move()
     {
-        body.velocity = new Vector2(-movingDirection * speed, body.velocity.y);
+        if (canMove)
+        {
+            body.velocity = new Vector2(-movingDirection * speed, body.velocity.y);
+            animator.SetBool("moving", true);
+        }
+        else
+        {
+            animator.SetBool("moving", false);
+        }
+        
     }
 
     public void Trigger()
     {
-        Debug.Log($"{gameObject.name} hat den Spieler entdeckt!");
+        Debug.Log($"{gameObject.name} player detected!");
         playerDetected = true;
     }
 
@@ -58,7 +92,6 @@ public class FloidController : MonoBehaviour, IEnemy
     }
     private void OnCollisionStay2D(Collision2D other)
     {
-
         if (other.gameObject.tag == "Wall")
         {
             movingDirection *= -1;

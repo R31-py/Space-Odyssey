@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class EnemyController : MonoBehaviour
 {
-    [SerializeField] public float lifePoints = 4f;
+    [SerializeField] public float lifePoints = 3f;
     [SerializeField] public PlayerValues player;
     public Rigidbody2D body;
     private int movingDirection = 1;
