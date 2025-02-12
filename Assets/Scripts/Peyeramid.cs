@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Peyeramid : MonoBehaviour, IEnemy
+public class Peyeramid : Enemy
 {
     private float speed = 3f;
     public float height = 3f; 

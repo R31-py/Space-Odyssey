@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FloidController : MonoBehaviour, IEnemy
+public class FloidController : Enemy
 {
     [SerializeField] public float lifePoints = 4f;
     public float deathTimer = 3f;

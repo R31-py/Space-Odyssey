@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SH_Controller : MonoBehaviour, IEnemy
+public class SH_Controller : Enemy
 {
     [SerializeField] public float lifePoints = 2f;
     public float deathTimer = 3f;
@@ -39,6 +39,7 @@ public class SH_Controller : MonoBehaviour, IEnemy
         Debug.Log($"{gameObject.name} attacked!");
         animator.SetTrigger("attack");
         Instantiate(SHs_Dagger, transform.position + new Vector3(0, 0, 0), Quaternion.identity);
+        
     }
 
     public void Move()

@@ -5,7 +5,7 @@ using UnityEditor;
 using UnityEngine;
 using Object = System.Object;
 
-public class Enemy : MonoBehaviour, IEnemy
+public class  Enemy : MonoBehaviour, IEnemy
 {
     public GameObject target;
     
@@ -15,6 +15,7 @@ public class Enemy : MonoBehaviour, IEnemy
     public float moveSpeed;
     public float attackRange;
     public float triggerRange;
+    public int lifepoints;
     
     public bool canMove = true;
     public bool targetInSight;
