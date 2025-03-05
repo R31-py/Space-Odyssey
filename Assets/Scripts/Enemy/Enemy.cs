@@ -29,12 +29,12 @@ public class  Enemy : MonoBehaviour, IEnemy
     public String moveAnimationName;
     
     
-    public void Attack()
+    public virtual void Attack()
     {
         Debug.Log("Attacking");
     }
 
-    public void Move(int direction)
+    public virtual void Move(int direction)
     {
          // If target not close go to him
         if (direction != 0)
@@ -50,7 +50,7 @@ public class  Enemy : MonoBehaviour, IEnemy
         }
     }
 
-    public void Trigger()
+    public virtual void Trigger()
     {
         Debug.Log("Trigger");
     }
