@@ -3049,6 +3049,22 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1021701328730309424, guid: 7f672a7e008982f42a5078edb4eec8ab, type: 3}
+      propertyPath: canMove
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1021701328730309424, guid: 7f672a7e008982f42a5078edb4eec8ab, type: 3}
+      propertyPath: attackRange
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1021701328730309424, guid: 7f672a7e008982f42a5078edb4eec8ab, type: 3}
+      propertyPath: triggerRange
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 1021701328730309424, guid: 7f672a7e008982f42a5078edb4eec8ab, type: 3}
+      propertyPath: attackAnimationName
+      value: attack
+      objectReference: {fileID: 0}
     - target: {fileID: 1021701328730309430, guid: 7f672a7e008982f42a5078edb4eec8ab, type: 3}
       propertyPath: m_RootOrder
       value: 11

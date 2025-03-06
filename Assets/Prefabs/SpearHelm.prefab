@@ -169,11 +169,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dbd0b0f9144bae24a879ad69ce0ed9d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lifePoints: 2
+  target: {fileID: 0}
+  moveSpeed: 0
+  attackRange: 0
+  triggerRange: 0
+  lifepoints: 1
+  canMove: 0
+  targetInSight: 0
+  body: {fileID: 1021701328730309428}
+  animator: {fileID: 1021701328730309425}
+  enemyLayer: []
+  deathAnimationName: 
+  attackAnimationName: attack
+  moveAnimationName: 
   deathTimer: 3
   SHs_Dagger: {fileID: 5602695544511809787, guid: 0cad8859ff418f148add1fff28cbcff0, type: 3}
   attackCooldown: 5
-  animator: {fileID: 1021701328730309425}
 --- !u!58 &1021701328730309431
 CircleCollider2D:
   m_ObjectHideFlags: 0

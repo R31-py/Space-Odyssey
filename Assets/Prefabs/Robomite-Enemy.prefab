@@ -149,14 +149,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 64dca5dbad6709a4b82a00f82f87c465, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lifePoints: 4
-  player: {fileID: 0}
+  target: {fileID: 0}
+  moveSpeed: 1
+  attackRange: 1
+  triggerRange: 5
+  lifepoints: 1
+  canMove: 0
+  targetInSight: 0
   body: {fileID: 616484987967438386}
   animator: {fileID: 616484987967438389}
-  playerDetected: 0
-  canMove: 0
+  enemyLayer: []
+  deathAnimationName: Death
+  attackAnimationName: Attack
+  moveAnimationName: Move
   waitTime: 1
-  deathTimer: 1
+  hitCooldown: 1
+  player: {fileID: 0}
 --- !u!95 &616484987967438389
 Animator:
   serializedVersion: 5
