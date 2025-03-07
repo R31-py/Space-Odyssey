@@ -1,6 +1,6 @@
 interface IEnemy
 {
     void Attack();
-    void Move(int direction);
+    void Move(float direction);
     void Trigger();
 }

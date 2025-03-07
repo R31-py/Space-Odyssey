@@ -10,7 +10,8 @@ public class SH_Controller : Enemy
     private float attackTimer = 1f;
     private Transform playerTransform;
     private bool playerDetected = false;
-    
+    private bool isAttacking = false; // NEW: Track attack state
+
     private void Awake()
     {
         body = GetComponent<Rigidbody2D>();
@@ -25,7 +26,16 @@ public class SH_Controller : Enemy
 
     private void Update()
     {
-        if (playerDetected)
+        if (!playerDetected) 
+        {
+            isAttacking = false; 
+            animator.ResetTrigger(attackAnimationName); // Stop attack animation if player leaves
+            animator.Play("idle");
+            return;
+        }
+
+        // Attack only if not already attacking
+        if (!isAttacking)
         {
             attackTimer -= Time.deltaTime;
             if (attackTimer <= 0)
@@ -34,28 +44,11 @@ public class SH_Controller : Enemy
                 attackTimer = attackCooldown;
             }
         }
-
-        if (lifepoints <= 0)
-        {
-            animator.SetTrigger(deathAnimationName);
-            canMove = false;
-            Destroy(gameObject, deathTimer);
-        }
     }
 
     public override void Attack()
     {
         if (playerTransform == null) return;
-
-        Debug.Log($"{gameObject.name} attacked!");
-        animator.SetTrigger(attackAnimationName);
-        
-    }
-
-    public void SpawnDagger()
-    {
-        Debug.Log($"{gameObject.name} spawned a dagger!");
-
         // Richtung zum Spieler berechnen
         /*Vector2 attackDirection = (playerTransform.position - transform.position).normalized;
 
@@ -63,10 +56,28 @@ public class SH_Controller : Enemy
         GameObject dagger = Instantiate(SHs_Dagger, transform.position, Quaternion.identity);
         Rigidbody2D daggerRb = dagger.GetComponent<Rigidbody2D>();
         daggerRb.velocity = attackDirection * 10f;*/ // Geschwindigkeit anpassen
-        Instantiate(SHs_Dagger, transform.position + new Vector3(0, 0, 0), Quaternion.identity);
+
+        Debug.Log($"{gameObject.name} attacked!");
+        isAttacking = true; // Prevent multiple attacks at once
+        animator.SetTrigger(attackAnimationName);
     }
 
-    public override void Move(int direction)
+    // Animation event for dagger spawn
+    public void SpawnDagger()
+    {
+        if (playerDetected) // Only spawn dagger if player is still in range
+        {
+            Instantiate(SHs_Dagger, transform.position, Quaternion.identity);
+        }
+        else
+        {
+            Debug.Log($"{gameObject.name} tried to attack, but the player is gone.");
+        }
+
+        isAttacking = false; // Allow next attack
+    }
+
+    public override void Move(float direction)
     {
         throw new System.NotImplementedException();
     }
@@ -81,7 +92,17 @@ public class SH_Controller : Enemy
     {
         if (collision.CompareTag("Player"))
         {
-            Trigger();
+            playerDetected = true;
+            Debug.Log($"{gameObject.name} detected the player.");
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Player"))
+        {
+            playerDetected = false;
+            Debug.Log($"{gameObject.name} lost sight of the player.");
         }
     }
 }

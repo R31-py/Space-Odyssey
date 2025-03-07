@@ -95,7 +95,7 @@ Rigidbody2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6028869001739873053}
-  m_BodyType: 0
+  m_BodyType: 1
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
@@ -146,4 +146,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 99b5f46b3a7f1e34196e6d6f3ada2d33, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  target: {fileID: 0}
+  moveSpeed: 0
+  attackRange: 0
+  triggerRange: 0
+  lifepoints: 100
+  canMove: 1
+  targetInSight: 0
+  body: {fileID: 6028869001739873040}
+  animator: {fileID: 0}
+  enemyLayer: []
+  deathAnimationName: 
+  attackAnimationName: 
+  moveAnimationName: 
+  enemyBoundry:
+  - 100
+  - 100
+  startX: 0
+  speed: 3
   height: 2

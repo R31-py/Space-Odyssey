@@ -27,6 +27,13 @@ public class  Enemy : MonoBehaviour, IEnemy
     public String deathAnimationName;
     public String attackAnimationName;
     public String moveAnimationName;
+    public float[] enemyBoundry = { 100,100 };
+    public float startX;
+
+    public void Start()
+    {
+        startX=transform.position.x;
+    }
     
     
     public virtual void Attack()
@@ -34,21 +41,30 @@ public class  Enemy : MonoBehaviour, IEnemy
         Debug.Log("Attacking");
     }
 
-    public virtual void Move(int direction)
+    public virtual void Move(float direction)
     {
-         // If target not close go to him
-        if (direction != 0)
+        // Corrected boundary check
+        if (transform.position.x > startX - enemyBoundry[0] && transform.position.x < startX + enemyBoundry[1])
         {
-            // -1 or 1
-            direction = Mathf.Abs(direction) / direction;
-            body.velocity = new Vector2(direction * moveSpeed, body.velocity.y);  
-            animator.SetBool(moveAnimationName, true);
+            // If target is not close, move towards it
+            if (direction != 0)
+            {
+                direction = Mathf.Sign(direction); // Avoid division by zero
+                body.velocity = new Vector2(direction * moveSpeed, body.velocity.y);
+                animator.SetBool(moveAnimationName, true);
+            }
+            else
+            {
+                animator.SetBool(moveAnimationName, false);
+            }
         }
         else
         {
-            animator.SetBool(moveAnimationName, false);
+            // Reverse direction when out of bounds
+            body.velocity = new Vector2(-Mathf.Sign(body.velocity.x) * moveSpeed, body.velocity.y);
         }
     }
+
 
     public virtual void Trigger()
     {
@@ -89,7 +105,7 @@ public class  Enemy : MonoBehaviour, IEnemy
         
         if (targetInSight && canMove)
         {
-            Move((int)GetDirection(target.transform).x);
-        }
+            Move((int)GetDirection(target.transform).x); 
+        } 
     }
 }
