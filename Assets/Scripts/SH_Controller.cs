@@ -10,7 +10,7 @@ public class SH_Controller : Enemy
     private float attackTimer = 1f;
     private Transform playerTransform;
     private bool playerDetected = false;
-    private bool isAttacking = false; // NEW: Track attack state
+    private bool isAttacking = false; 
 
     private void Awake()
     {
@@ -76,12 +76,7 @@ public class SH_Controller : Enemy
 
         isAttacking = false; // Allow next attack
     }
-
-    public override void Move(float direction)
-    {
-        throw new System.NotImplementedException();
-    }
-
+    
     public override void Trigger()
     {
         Debug.Log($"{gameObject.name} player detected!");

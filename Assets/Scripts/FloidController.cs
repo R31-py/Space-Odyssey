@@ -6,29 +6,27 @@ public class FloidController : Enemy
 {
     [SerializeField] private float deathTimer = 3f;
     [SerializeField] private GameObject floidLaser;
-    [SerializeField] private Transform firePoint;
     [SerializeField] private float attackCooldown = 1.5f;
+    private Vector3 firePoint ;
     private float attackTimer = 0f;
     private int movingDirection = 1;
-    private Transform playerTransform;
     private bool playerDetected = false;
+    private Transform playerTransform;
     
     private void Awake()
     {
         body = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         if (movingDirection == 0) movingDirection = 1;
+        playerTransform = target.transform;
     }
 
-    private void Update()
+    private void  Update()
     {
         if (canMove)
         {
             body.velocity = new Vector2(-movingDirection * moveSpeed, body.velocity.y);
-            if (body.velocity.x != 0)
-            {
-                animator.SetTrigger(moveAnimationName);
-            }
+            animator.SetTrigger(moveAnimationName);
         }
         
         if (playerDetected)
@@ -53,12 +51,15 @@ public class FloidController : Enemy
     {
         if (playerTransform == null) return;
         
-        Vector2 direction = (playerTransform.position - firePoint.position).normalized;
-        GameObject laser = Instantiate(floidLaser, firePoint.position, Quaternion.identity);
+        firePoint = transform.position + new Vector3(0, 0.8f, 0);
+        
+        Vector2 direction = (playerTransform.position - firePoint).normalized;
+        GameObject laser = Instantiate(floidLaser, firePoint, Quaternion.identity);
         Rigidbody2D laserRb = laser.GetComponent<Rigidbody2D>();
         laserRb.velocity = direction * 10f;
         
         animator.SetTrigger(attackAnimationName);
+        Debug.Log("Floid attacked!");
     }
 
     public override void Trigger()
@@ -71,15 +72,16 @@ public class FloidController : Enemy
         if (collision.CompareTag("Player"))
         {
             Trigger();
+            Debug.Log("Floid detected Player!");
         }
     }
     
-    private void OnCollisionStay2D(Collision2D other)
+    private void OnCollisionEnter2D(Collision2D other)
     {
         if (other.gameObject.CompareTag("Wall"))
         {
             movingDirection *= -1;
-            transform.localScale = new Vector3(movingDirection, 1, 1);
+            GetComponent<SpriteRenderer>().flipX = movingDirection < 0;
             Debug.Log("Richtung geändert!");
         }
     }

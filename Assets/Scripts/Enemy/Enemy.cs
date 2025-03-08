@@ -92,7 +92,7 @@ public class  Enemy : MonoBehaviour, IEnemy
 
     public void OnTriggerEnter2D(Collider2D other)
     {
-        if(other.tag == target.tag && targetInSight)
+        if(other == target)
             Trigger();   
     }
 
