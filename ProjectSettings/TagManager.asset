@@ -9,6 +9,7 @@ TagManager:
   - Health-Item
   - Border
   - PlayerInvisible
+  - Obstacle
   layers:
   - Default
   - TransparentFX
