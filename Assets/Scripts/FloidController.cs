@@ -55,10 +55,11 @@ public class FloidController : Enemy
         
         Vector2 direction = (playerTransform.position - firePoint).normalized;
         GameObject laser = Instantiate(floidLaser, firePoint, Quaternion.identity);
+        laser.SetActive(true);
         Rigidbody2D laserRb = laser.GetComponent<Rigidbody2D>();
         laserRb.velocity = direction * 10f;
         
-        animator.SetTrigger(attackAnimationName);
+        //animator.SetTrigger(attackAnimationName);
         Debug.Log("Floid attacked!");
     }
 
