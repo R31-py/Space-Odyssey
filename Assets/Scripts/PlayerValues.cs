@@ -9,7 +9,6 @@ public class PlayerValues : MonoBehaviour
     private int oldHealth = 3;
     [SerializeField] public int maxHealth;
     [SerializeField] public GameObject player;
-    [SerializeField] private GameObject message;
     public ParticleSystem damageParticle;
     
     public KeyCode RIGHT = KeyCode.RightArrow;
@@ -17,34 +16,39 @@ public class PlayerValues : MonoBehaviour
     public KeyCode DASH = KeyCode.E;
     public KeyCode JUMP = KeyCode.Space;
     public KeyCode FIGHT = KeyCode.Z;
+
+    public int[] Inventory = new int[3];
+    
     
     // Tutorial Variables
     [SerializeField] public int tutorialStage = 0;
     
     void Start()
     {
+        Inventory[0] = 0;
+        Inventory[1] = 0;
+        Inventory[2] = 0;
         oldHealth = health;
     }
 
     // Update is called once per frame
     void Update()
     {
-        
         if (Input.GetKeyDown(JUMP))
         {
-            SoundManager.Instance.PlaySound2D("player_Jump");
+            
         }
         
         if (Input.GetKeyDown(FIGHT))
         {
-            SoundManager.Instance.PlaySound2D("player_Slash");
+            
         }
         
         if (oldHealth > health)
         {
-            Debug.Log("Play damageParticle");
-            damageParticle.Play();
-            SoundManager.Instance.PlaySound2D("player_Hurt");
+            Debug.Log("Play damageParticle"); 
+            //          damageParticle.Play();
+//            SoundManager.Instance.PlaySound2D("player_Hurt");
             oldHealth = health;
         }
         else
@@ -53,7 +57,6 @@ public class PlayerValues : MonoBehaviour
         }
         if (health <= 0)
         {
-            message.SetActive(true);
             player.SetActive(false);    
         }
     }

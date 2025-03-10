@@ -17,6 +17,7 @@ public class PlayerMovement : MonoBehaviour
     public float gravity = 6f;
     private BoxCollider2D boxCollider2D;
     private float wallJumpCD;
+    private float direction;
     private float dashCD;
     private float dashTimer;
     private float jumpHeight = 0;
@@ -37,12 +38,12 @@ public class PlayerMovement : MonoBehaviour
 
         // Get input (Left, Right)
         horizontalInput = Input.GetAxis("Horizontal");
-        
+        direction = horizontalInput / Math.Abs(horizontalInput);
         // Sprite facing direction
         if (playerValues.tutorialStage >= 0)
         {
             if(horizontalInput != 0)
-                transform.localScale = new Vector3(Math.Abs(transform.localScale.x) * (horizontalInput / Math.Abs(horizontalInput)), transform.localScale.y, transform.localScale.z);
+                transform.localScale = new Vector3(Math.Abs(transform.localScale.x) * direction, transform.localScale.y, transform.localScale.z);
         }
 
         
@@ -107,6 +108,11 @@ public class PlayerMovement : MonoBehaviour
             jumpHeight = 0;
         }
 
+        if (Input.GetKey(playerValues.FIGHT))
+        {
+            slash();
+        }
+
         // Update animation booleans
         animator.SetBool("isMoving", horizontalInput != 0);
         animator.SetBool("isGrounded", isGroundedValue);
@@ -115,6 +121,7 @@ public class PlayerMovement : MonoBehaviour
     // Jump function
     private void jump()
     {
+     //   SoundManager.Instance.PlaySound2D("player_Jump");
         bool isGroundedValue = isGrounded();
         if (isGroundedValue)
         {
@@ -150,6 +157,17 @@ public class PlayerMovement : MonoBehaviour
 
             wallJumpCD = 0;
         }
+        
+    }
+
+    private void slash()
+    {
+        //SoundManager.Instance.PlaySound2D("player_Slash");
+        animator.SetTrigger("attack");
+        RaycastHit2D raycastHit = Physics2D.BoxCast(boxCollider2D.bounds.center, boxCollider2D.bounds.size, 0, Vector2.right * direction, 0.1f, groundLayer);
+        Enemy enemy = raycastHit.collider.gameObject.GetComponent<Enemy>();
+        if (enemy) 
+            enemy.lifepoints -= 1;
         
     }
 

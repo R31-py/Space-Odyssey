@@ -13,7 +13,7 @@ public class TutorialManager : MonoBehaviour
     public Message message;
     public GameObject messageObject;
     public int currentMessage = 0;
-
+    public Boolean tutorialMode = false;
     void Start()
     {
         positions = new Vector3[5];
@@ -27,6 +27,10 @@ public class TutorialManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (!tutorialMode)
+        {
+            currentTutorial = 10;
+        }
         if (currentTutorial >= 4)
             endTutorial();
         else
