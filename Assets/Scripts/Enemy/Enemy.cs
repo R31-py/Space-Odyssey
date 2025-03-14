@@ -96,7 +96,7 @@ public class  Enemy : MonoBehaviour, IEnemy
             Trigger();   
     }
 
-    private void Update()
+    private  void Update()
     {
         if (canSee(target) && !target.tag.Equals("Player"))
         {
