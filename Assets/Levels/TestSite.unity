@@ -873,7 +873,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 488594305}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -5.99, y: -1.27, z: -0.0117485095}
+  m_LocalPosition: {x: -2.59, y: -1.27, z: -0.0117485095}
   m_LocalScale: {x: 0.3, y: 0.3, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1969,6 +1969,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 3491989220730285799, guid: 269d1a8ce09a4f74a9d547bf7815395b, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8708095123389225112, guid: 269d1a8ce09a4f74a9d547bf7815395b, type: 3}
       propertyPath: m_SpriteTilingProperty.newSize.x
       value: 5.07
@@ -2007,13 +2011,15 @@ GameObject:
   - component: {fileID: 1453796489}
   - component: {fileID: 1453796488}
   - component: {fileID: 1453796487}
+  - component: {fileID: 1453796493}
+  - component: {fileID: 1453796492}
   m_Layer: 0
   m_Name: Chamel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!50 &1453796487
 Rigidbody2D:
   serializedVersion: 4
@@ -2033,8 +2039,8 @@ Rigidbody2D:
   m_Material: {fileID: 0}
   m_Interpolate: 0
   m_SleepingMode: 1
-  m_CollisionDetection: 0
-  m_Constraints: 0
+  m_CollisionDetection: 1
+  m_Constraints: 4
 --- !u!61 &1453796488
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -2045,7 +2051,7 @@ BoxCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
@@ -2142,13 +2148,63 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1453796486}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3.3934722, y: -1.01, z: 0.0021233126}
+  m_LocalPosition: {x: 6.4, y: -1.01, z: 0.0021233126}
   m_LocalScale: {x: 0.2, y: 0.2, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 17
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!58 &1453796492
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1453796486}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: -0.42966843, y: 0}
+  serializedVersion: 2
+  m_Radius: 36.394123
+--- !u!114 &1453796493
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1453796486}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f08d61e9d1cf144aaa34eb7110f110f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  target: {fileID: 1603855110}
+  moveSpeed: 1
+  attackRange: 3
+  triggerRange: 8
+  lifepoints: 3
+  canMove: 1
+  targetInSight: 0
+  body: {fileID: 1453796487}
+  animator: {fileID: 1453796489}
+  enemyLayer: []
+  deathAnimationName: 
+  attackAnimationName: attack
+  moveAnimationName: move
+  enemyBoundry:
+  - 100
+  - 100
+  startX: 0
+  deathTimer: 3
+  attackCooldown: 1.5
+  chargeSpeed: 2
+  chargeDuration: 0.7
+  windUpTime: 0.5
 --- !u!1 &1528636722
 GameObject:
   m_ObjectHideFlags: 0
@@ -2258,7 +2314,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1603855110}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.52, y: -1.3, z: 0.20460197}
+  m_LocalPosition: {x: -5.52, y: -1.3, z: 0.20460197}
   m_LocalScale: {x: 0.3, y: 0.3, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2532,7 +2588,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!50 &1744346223
 Rigidbody2D:
   serializedVersion: 4
@@ -3846,7 +3902,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6028869001739873042, guid: d78e0701ab6657a4bbb4a9104048f381, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 4.48
+      value: -5.09
       objectReference: {fileID: 0}
     - target: {fileID: 6028869001739873042, guid: d78e0701ab6657a4bbb4a9104048f381, type: 3}
       propertyPath: m_LocalPosition.y
@@ -3955,7 +4011,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7646690047917794013, guid: 34f3220f5099cb44d8019d2766eb5429, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 34f3220f5099cb44d8019d2766eb5429, type: 3}

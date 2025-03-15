@@ -2,17 +2,23 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FloidController : Enemy
+public class ChamelController : Enemy
 {
     [SerializeField] private float deathTimer = 3f;
-    [SerializeField] private GameObject floidLaser;
     [SerializeField] private float attackCooldown = 1.5f;
-    private Vector3 firePoint ;
+    [SerializeField] private float chargeSpeed = 6f;
+    [SerializeField] private float chargeDuration = 0.7f;
+    [SerializeField] private float windUpTime = 0.5f; // Wind-up delay before charging
+
     private float attackTimer = 0f;
     private int movingDirection = 1;
     private bool playerDetected = false;
-    private Transform playerTransform;
+    private bool isCharging = false;
     
+    private Transform playerTransform;
+    private Rigidbody2D body;
+    private Animator animator;
+
     private void Awake()
     {
         body = GetComponent<Rigidbody2D>();
@@ -21,14 +27,16 @@ public class FloidController : Enemy
         playerTransform = target.transform;
     }
 
-    private void  Update()
+    private void Update()
     {
+        if (isCharging) return; 
+
         if (canMove)
         {
             body.velocity = new Vector2(-movingDirection * moveSpeed, body.velocity.y);
             animator.SetTrigger(moveAnimationName);
         }
-        
+
         if (playerDetected)
         {
             attackTimer -= Time.deltaTime;
@@ -38,7 +46,7 @@ public class FloidController : Enemy
                 attackTimer = attackCooldown;
             }
         }
-        
+
         if (lifepoints <= 0)
         {
             animator.SetTrigger(deathAnimationName);
@@ -50,17 +58,13 @@ public class FloidController : Enemy
     public override void Attack()
     {
         if (playerTransform == null) return;
-        
-        firePoint = transform.position + new Vector3(0, 0.8f, 0);
-        
-        Vector2 direction = (playerTransform.position - firePoint).normalized;
-        GameObject laser = Instantiate(floidLaser, firePoint, Quaternion.identity);
-        laser.SetActive(true);
-        Rigidbody2D laserRb = laser.GetComponent<Rigidbody2D>();
-        laserRb.velocity = direction * 10f;
+        // Recalculate direction using the latest player position
+        Vector2 chargeDirection = (playerTransform.position - transform.position).normalized;
+    
+        body.velocity = chargeDirection * chargeSpeed;
         
         animator.SetTrigger(attackAnimationName);
-        Debug.Log("Floid attacked!");
+        Debug.Log("Chamel attacked with event!");
     }
 
     public override void Trigger()
@@ -73,18 +77,24 @@ public class FloidController : Enemy
         if (collision.CompareTag("Player"))
         {
             Trigger();
-            Debug.Log("Floid detected Player!");
+            Debug.Log("Chamel detected Player!");
         }
     }
-    
+
     private void OnCollisionEnter2D(Collision2D other)
     {
+        if (isCharging && (other.gameObject.CompareTag("Wall") || other.gameObject.CompareTag("Player")))
+        {
+            body.velocity = Vector2.zero; // Stop charge on collision
+            isCharging = false;
+            canMove = true;
+        }
+
         if (other.gameObject.CompareTag("Wall"))
         {
             movingDirection *= -1;
             GetComponent<SpriteRenderer>().flipX = movingDirection < 0;
-            Debug.Log("Richtung geändert!");
+            Debug.Log("Direction changed!");
         }
     }
 }
-
