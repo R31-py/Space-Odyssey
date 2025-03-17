@@ -5,7 +5,8 @@ using UnityEngine;
 public class Peyeramid : Enemy
 {
     [SerializeField] private float speed = 3f;
-    [SerializeField] private float height = 3f; 
+    [SerializeField] private float height = 3f;
+    [SerializeField] public PlayerValues player;
     private Vector3 startPos;
 
     private void Awake()
@@ -40,9 +41,13 @@ public class Peyeramid : Enemy
         transform.position = new Vector3(startPos.x, newY, startPos.z); // Keep original X/Z, move only Y
     }
 
-    public override void Trigger()
+    private void OnCollisionStay2D(Collision2D other)
     {
-        Debug.Log($"{gameObject.name} triggered!");
+        if (other.gameObject.CompareTag("Player"))
+        {
+            player.health -= 1;
+        }
     }
+    
     
 }

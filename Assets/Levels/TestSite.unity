@@ -670,11 +670,6 @@ Transform:
   m_Father: {fileID: 1706323542}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &419592064 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 526218484483446243, guid: 0a3d7e44ae9648440858c7d73a66a1f8, type: 3}
-  m_PrefabInstance: {fileID: 4450919605613231308}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &488594305
 GameObject:
   m_ObjectHideFlags: 0
@@ -696,7 +691,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!58 &488594306
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -743,7 +738,7 @@ MonoBehaviour:
   - 100
   startX: 0
   deathTimer: 3
-  floidLaser: {fileID: 419592064}
+  floidLaser: {fileID: 3282692092682380400, guid: 12cffdef5f0c07e479edaadb33710f00, type: 3}
   attackCooldown: 1.5
 --- !u!95 &488594308
 Animator:
@@ -2019,7 +2014,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!50 &1453796487
 Rigidbody2D:
   serializedVersion: 4
