@@ -96,6 +96,15 @@ public class  Enemy : MonoBehaviour, IEnemy
             Trigger();   
     }
 
+    public void getHit(int amount)
+    {
+        lifepoints -= amount;
+        if (lifepoints <= 0)
+        {
+            Destroy(gameObject);
+        }
+    }
+
     private  void Update()
     {
         if (canSee(target) && !target.tag.Equals("Player"))

@@ -8,6 +8,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float movementSpeed = 10;
     [SerializeField] private float maxJumpHeight = 0;
     [SerializeField] private LayerMask groundLayer;
+    [SerializeField] private LayerMask enemyLayer;
     [SerializeField] private LayerMask wallLayer;
     [SerializeField] private Animator animator;
     [SerializeField] private PlayerValues playerValues;
@@ -110,8 +111,7 @@ public class PlayerMovement : MonoBehaviour
 
         if (Input.GetKeyDown(playerValues.FIGHT) )
         {
-            slash();
-            animator.SetBool("attack", true);
+            animator.SetTrigger("attack");
         }
         
        
@@ -155,11 +155,12 @@ public class PlayerMovement : MonoBehaviour
 
     private void slash()
     {
-        RaycastHit2D raycastHit = Physics2D.BoxCast(boxCollider2D.bounds.center, boxCollider2D.bounds.size, 0, Vector2.right * direction, 0.1f, groundLayer);
+        RaycastHit2D raycastHit = Physics2D.BoxCast(boxCollider2D.bounds.center, boxCollider2D.bounds.size, 0, Vector2.right * direction, 0.2f, enemyLayer);
         if (raycastHit.collider != null)
         {
             Enemy enemy = raycastHit.collider.GetComponent<Enemy>();
-            if (enemy) enemy.lifepoints -= 1;
+            if (enemy) enemy.getHit(1) ;
+            
         }
     }
 

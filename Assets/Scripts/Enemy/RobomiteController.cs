@@ -35,11 +35,6 @@ public class RobomiteController : Enemy
             animator.SetTrigger(moveAnimationName);
         }
         
-        if (lifepoints <= 0)
-        {
-            Destroy(gameObject);
-        }
-        
         if (currentHitCooldown < hitCooldown)
         {
             currentHitCooldown += Time.deltaTime;
