@@ -11,6 +11,8 @@ public class PlayerValues : MonoBehaviour
     [SerializeField] public GameObject player;
     public ParticleSystem damageParticle;
     
+    public int money = 100;
+    
     public KeyCode RIGHT = KeyCode.RightArrow;
     public KeyCode LEFT = KeyCode.LeftArrow;
     public KeyCode DASH = KeyCode.E;
@@ -34,20 +36,11 @@ public class PlayerValues : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(JUMP))
-        {
-            
-        }
-        
-        if (Input.GetKeyDown(FIGHT))
-        {
-            
-        }
         
         if (oldHealth > health)
         {
             Debug.Log("Play damageParticle"); 
-            //          damageParticle.Play();
+            //damageParticle.Play();
 //            SoundManager.Instance.PlaySound2D("player_Hurt");
             oldHealth = health;
         }

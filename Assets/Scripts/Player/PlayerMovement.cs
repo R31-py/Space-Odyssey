@@ -108,15 +108,13 @@ public class PlayerMovement : MonoBehaviour
             jumpHeight = 0;
         }
 
-        if (Input.GetKeyDown(playerValues.FIGHT))
+        if (Input.GetKeyDown(playerValues.FIGHT) )
         {
             slash();
+            animator.SetBool("attack", true);
         }
-
-        if (Input.GetKeyUp(playerValues.FIGHT))
-        {
-            animator.SetBool("attack", false);
-        }
+        
+       
         Vector3 velocity = body.velocity;
         velocity.x = Mathf.Clamp(velocity.x, -movementSpeed, movementSpeed);
         velocity.z = Mathf.Clamp(velocity.z, -movementSpeed, movementSpeed);

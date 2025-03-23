@@ -7,6 +7,7 @@ public class ShopController : MonoBehaviour
     public List<ShopItemUI> shopItems;
     public GameObject player;
     private PlayerValues playerValues;
+    InventoryController inventoryController;
 
     private void Start()
     {
@@ -14,11 +15,11 @@ public class ShopController : MonoBehaviour
         //UpdateShopItems();
     }
 
-    /*public void UpdateShopItems()
+    public void UpdateShopItems()
     {
         foreach (var itemUI in shopItems)
         {
-            bool canBuy = playerValues.money >= itemUI.abilityItem.cost && playerValues.HasFreeSlot();
+            bool canBuy = playerValues.money >= itemUI.abilityItem.cost && inventoryController.add(null);
             itemUI.buyButton.interactable = canBuy;
             Color itemColor = itemUI.itemImage.color;
             itemColor.a = canBuy ? 1f : 0.5f;
@@ -28,15 +29,15 @@ public class ShopController : MonoBehaviour
 
     public void BuyAbility(AbilityItem item)
     {
-        if (playerValues.money >= item.cost && playerValues.HasFreeSlot())
+        if (playerValues.money >= item.cost && inventoryController.add(null))
         {
             playerValues.money -= item.cost;
-            playerValues.AddAbility(item);
+            inventoryController.add(item);
             Debug.Log($"Gekauft: {item.abilityID}");
         }
         else
         {
             Debug.Log("Nicht genug Geld oder kein freier Platz!");
         }
-    }*/
+    }
 }

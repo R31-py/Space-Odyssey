@@ -170,8 +170,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a2f34a6f5b8090449e84cef2f00cc30, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cam: {fileID: 519420028}
-  parallexEffect: 0
+  parallaxEffect: 0
 --- !u!212 &2178716
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -281,8 +280,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a2f34a6f5b8090449e84cef2f00cc30, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cam: {fileID: 519420028}
-  parallexEffect: 0
+  parallaxEffect: 0
 --- !u!212 &119979968
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -72290,7 +72288,7 @@ MonoBehaviour:
     m_Bits: 64
   animator: {fileID: 211793667}
   playerValues: {fileID: 178377990}
-  gravity: 3
+  body: {fileID: 0}
 --- !u!114 &178377987
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -72303,11 +72301,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e5d59741142a47041a6fb6e7bf73b07c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attackCooldown: 0.5
-  attackReach: 1
-  enemyLayer:
-    serializedVersion: 2
-    m_Bits: 8
 --- !u!114 &178377988
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -72320,15 +72313,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c2175d6455436524ab6796544cca8043, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animator: {fileID: 211793667}
-  abilityName: attack
-  abilityIcon: {fileID: 0}
-  damage: 1
-  range: 1
-  enemyLayer:
-    serializedVersion: 2
-    m_Bits: 8
-  boxCollider2D: {fileID: 178377984}
 --- !u!114 &178377989
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -72360,13 +72344,14 @@ MonoBehaviour:
   health: 3
   maxHealth: 3
   player: {fileID: 178377980}
-  message: {fileID: 1974744260}
   damageParticle: {fileID: 1088939546}
+  money: 100
   RIGHT: 275
   LEFT: 276
   DASH: 101
   JUMP: 32
   FIGHT: 122
+  Inventory: 000000000000000000000000
   tutorialStage: 0
 --- !u!61 &178377991
 BoxCollider2D:
@@ -73013,8 +72998,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a2f34a6f5b8090449e84cef2f00cc30, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cam: {fileID: 519420028}
-  parallexEffect: 0.4
+  parallaxEffect: 0
 --- !u!212 &505164620
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -76236,6 +76220,7 @@ MonoBehaviour:
   message: {fileID: 744384769}
   messageObject: {fileID: 184049240}
   currentMessage: 0
+  tutorialMode: 0
 --- !u!4 &1373551780
 Transform:
   m_ObjectHideFlags: 0
@@ -77146,6 +77131,7 @@ GameObject:
   - component: {fileID: 1412852870}
   - component: {fileID: 1412852872}
   - component: {fileID: 1412852871}
+  - component: {fileID: 1412852873}
   m_Layer: 5
   m_Name: Inventory
   m_TagString: Untagged
@@ -77215,6 +77201,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1412852869}
   m_CullTransparentMesh: 1
+--- !u!114 &1412852873
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1412852869}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 27b2cbdcd15a9b44395bf71e194c0199, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1449220410
 GameObject:
   m_ObjectHideFlags: 0
@@ -78122,10 +78120,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 455e34e5aa051e94db6f25dab3017caf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  abilityIcon: {fileID: 1630582327}
-  cooldownTime: 0.5
-  index: 1
-  ability: {fileID: 178377988}
+  abilityItem: {fileID: 0}
 --- !u!114 &1630582327
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -78873,8 +78868,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a2f34a6f5b8090449e84cef2f00cc30, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cam: {fileID: 519420028}
-  parallexEffect: 0.7
+  parallaxEffect: 0
 --- !u!212 &1724474535
 SpriteRenderer:
   m_ObjectHideFlags: 0
