@@ -53,7 +53,7 @@ public class PlayerValues : MonoBehaviour
         }
         else
         {
-            damageParticle.Stop();
+            // damageParticle.Stop();
         }
         if (health <= 0)
         {
