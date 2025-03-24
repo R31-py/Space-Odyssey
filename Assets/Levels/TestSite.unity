@@ -1147,7 +1147,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 607427850}
-  tolerance: 1
+  tolerance: 0.1
   cameraSpeed: 5
 --- !u!114 &832658760
 MonoBehaviour:
@@ -3817,7 +3817,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 271694726270871204, guid: c873e68e8ac2fee408a47362749c6579, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 271694726270871204, guid: c873e68e8ac2fee408a47362749c6579, type: 3}
       propertyPath: m_LocalRotation.x
@@ -3825,7 +3825,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 271694726270871204, guid: c873e68e8ac2fee408a47362749c6579, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 271694726270871204, guid: c873e68e8ac2fee408a47362749c6579, type: 3}
       propertyPath: m_LocalRotation.z
