@@ -22,7 +22,6 @@ public class PlayerMovement : MonoBehaviour
     private float dashTimer;
     private float jumpHeight = 0;
     private bool secondJump = false;
-
     private void Awake()
     {
         body = GetComponent<Rigidbody2D>();
@@ -111,7 +110,7 @@ public class PlayerMovement : MonoBehaviour
 
         if (Input.GetKeyDown(playerValues.FIGHT) )
         {
-            animator.SetTrigger("attack");
+            animator.SetTrigger(new System.Random().Next(2) == 0 ? "attack" : "attack2");
         }
         
        
@@ -178,8 +177,8 @@ public class PlayerMovement : MonoBehaviour
 
     private bool onWall()
     {
-        //RaycastHit2D raycastHit = Physics2D.BoxCast(boxCollider2D.bounds.center, boxCollider2D.bounds.size, 0, new Vector2(transform.localScale.x, 0), 0.1f, wallLayer);
-        //return raycastHit.collider != null;
         return false;
+        RaycastHit2D raycastHit = Physics2D.BoxCast(boxCollider2D.bounds.center, boxCollider2D.bounds.size, 0, new Vector2(transform.localScale.x, 0), 0.1f, wallLayer);
+        return raycastHit.collider != null;
     }
 }
