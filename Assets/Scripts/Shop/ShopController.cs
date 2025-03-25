@@ -12,7 +12,7 @@ public class ShopController : MonoBehaviour
     private void Start()
     {
         playerValues = player.GetComponent<PlayerValues>();
-        //UpdateShopItems();
+        UpdateShopItems();
     }
 
     public void UpdateShopItems()
