@@ -29,12 +29,6 @@ public class Peyeramid : Enemy
         }
     }
 
-    public override void Attack()
-    {
-        // Implement attack logic if necessary
-        Debug.Log($"{gameObject.name} attacks!");
-    }
-
     public override void Move(float direction)
     {
         float newY = startPos.y + Mathf.Sin(Time.time * speed) * height;
