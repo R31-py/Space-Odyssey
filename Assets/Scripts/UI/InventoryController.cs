@@ -4,34 +4,38 @@ using UnityEngine;
 
 public class InventoryController : MonoBehaviour
 {
-    AbilitySlot[] inventory = new AbilitySlot[3];
+    private AbilitySlot[] inventory = new AbilitySlot[3];
     private PlayerValues playerValues;
-    
-    
-    // Start is called before the first frame update
+
     void Start()
     {
-     
+        playerValues = GetComponent<PlayerValues>();
     }
 
-    // Update is called once per frame
-    void Update()
+    public bool HasFreeSlot()
     {
-        
-    }
-
-    public bool add(AbilityItem abilityItem)
-    {
-        for(int i=0; i<inventory.Length; i++)
+        foreach (var slot in inventory)
         {
-            if (!inventory[i])
+            if (slot == null) return true;
+        }
+        return false;
+    }
+
+    public bool Add(AbilityItem abilityItem)
+    {
+        for (int i = 0; i < inventory.Length; i++)
+        {
+            if (inventory[i] == null)
             {
-                playerValues.Inventory[i] = abilityItem.abilityID;
+                inventory[i] = new AbilitySlot();
                 inventory[i].abilityItem = abilityItem;
+
+                Debug.Log($"Ability: {abilityItem.abilityID} zu Inventar-Slot {i} hinzugefügt!");
                 return true;
             }
         }
 
+        Debug.Log("Inventar ist voll!");
         return false;
     }
 }

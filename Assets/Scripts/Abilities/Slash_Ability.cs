@@ -26,7 +26,6 @@ public class Slash_Ability : MonoBehaviour
             {
                 enemy.lifepoints -= 2;
             }
-            Destroy(gameObject); 
         }
         else if (collision.CompareTag("Wall"))
         {
