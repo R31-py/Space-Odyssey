@@ -19,17 +19,13 @@ public class PlayerValues : MonoBehaviour
     public KeyCode JUMP = KeyCode.Space;
     public KeyCode FIGHT = KeyCode.Z;
 
-    public int[] Inventory = new int[3];
-    
+    public AbilityItem[] Inventory = new AbilityItem[3];
     
     // Tutorial Variables
     [SerializeField] public int tutorialStage = 0;
     
     void Start()
     {
-        Inventory[0] = 0;
-        Inventory[1] = 0;
-        Inventory[2] = 0;
         oldHealth = health;
     }
 

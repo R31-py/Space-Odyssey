@@ -19,7 +19,9 @@ public class ShopController : MonoBehaviour
     {
         foreach (var itemUI in shopItems)
         {
-            bool canBuy = playerValues.money >= itemUI.abilityItem.cost && inventoryController.add(null);
+            bool hasSpace = inventoryController.HasFreeSlot(); 
+            bool canBuy = playerValues.money >= itemUI.abilityItem.cost && hasSpace;
+            
             itemUI.buyButton.interactable = canBuy;
             Color itemColor = itemUI.itemImage.color;
             itemColor.a = canBuy ? 1f : 0.5f;
@@ -29,11 +31,13 @@ public class ShopController : MonoBehaviour
 
     public void BuyAbility(AbilityItem item)
     {
-        if (playerValues.money >= item.cost && inventoryController.add(null))
+        if (playerValues.money >= item.cost && inventoryController.HasFreeSlot()) 
         {
             playerValues.money -= item.cost;
-            inventoryController.add(item);
+            inventoryController.Add(item); 
             Debug.Log($"Gekauft: {item.abilityID}");
+
+            UpdateShopItems();
         }
         else
         {

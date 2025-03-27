@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public class AbilityItem : MonoBehaviour
+public class AbilityItem 
 {
     public int cost;
     public int abilityID;

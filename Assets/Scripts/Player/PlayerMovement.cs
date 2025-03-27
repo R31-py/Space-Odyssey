@@ -121,6 +121,7 @@ public class PlayerMovement : MonoBehaviour
 
         animator.SetBool("move", horizontalInput != 0);
         animator.SetBool("falling", !isGroundedValue);
+        body.angularVelocity = 0;
     }
 
     private void jump()
@@ -171,7 +172,7 @@ public class PlayerMovement : MonoBehaviour
 
     private bool isGrounded()
     {
-        RaycastHit2D raycastHit = Physics2D.BoxCast(boxCollider2D.bounds.center, boxCollider2D.bounds.size, 0, Vector2.down, 0.1f, groundLayer);
+        RaycastHit2D raycastHit = Physics2D.BoxCast(boxCollider2D.bounds.center, boxCollider2D.bounds.size * 0.9f, 0, Vector2.down, 0.2f, groundLayer);
         return raycastHit.collider != null;
     }
 
