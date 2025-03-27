@@ -6,11 +6,13 @@ using UnityEngine.UI;
 public class AbilitySlot : MonoBehaviour
 {
     public AbilityItem abilityItem;
-    private SpriteRenderer spriteRenderer;
+    public KeyCode keybind;
+    public bool isEmpty = true;
+    private Image image;
 
     private void Start()
     {
-        spriteRenderer = GetComponent<SpriteRenderer>();
+        image = GetComponent<Image>();
     }
 
     public void SetAbility(AbilityItem newAbility)
@@ -18,11 +20,13 @@ public class AbilitySlot : MonoBehaviour
         abilityItem = newAbility;
         if (abilityItem != null)
         {
-            spriteRenderer.sprite = abilityItem.icon;
+            image.sprite= abilityItem.icon;
+            isEmpty = false;
         }
         else
         {
-            spriteRenderer.sprite = null;
+            isEmpty = true;
+            image.sprite = null;
         }
     }
 }

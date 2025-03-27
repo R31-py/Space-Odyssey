@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,12 +7,17 @@ public class ShopController : MonoBehaviour
 {
     public List<ShopItemUI> shopItems;
     public GameObject player;
+    public InventoryController inventoryController;
     private PlayerValues playerValues;
-    InventoryController inventoryController;
-
+    
     private void Start()
     {
         playerValues = player.GetComponent<PlayerValues>();
+        inventoryController = inventoryController.GetComponent<InventoryController>();
+    }
+
+    private void Update()
+    {
         UpdateShopItems();
     }
 
@@ -34,14 +40,14 @@ public class ShopController : MonoBehaviour
         if (playerValues.money >= item.cost && inventoryController.HasFreeSlot()) 
         {
             playerValues.money -= item.cost;
-            inventoryController.Add(item); 
             Debug.Log($"Gekauft: {item.abilityID}");
-
-            UpdateShopItems();
+            inventoryController.Add(item);
         }
         else
         {
             Debug.Log("Nicht genug Geld oder kein freier Platz!");
         }
     }
+    
+
 }

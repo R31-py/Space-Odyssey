@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class InventoryController : MonoBehaviour
 {
-    private AbilitySlot[] inventory = new AbilitySlot[3];
+    public AbilitySlot[] inventory = new AbilitySlot[3];
     private PlayerValues playerValues;
 
     void Start()
@@ -14,9 +14,9 @@ public class InventoryController : MonoBehaviour
 
     public bool HasFreeSlot()
     {
-        foreach (var slot in inventory)
+        foreach (AbilitySlot slot in inventory)
         {
-            if (slot == null) return true;
+            if (slot.isEmpty) return true;
         }
         return false;
     }
@@ -25,10 +25,9 @@ public class InventoryController : MonoBehaviour
     {
         for (int i = 0; i < inventory.Length; i++)
         {
-            if (inventory[i] == null)
+            if (inventory[i].isEmpty)
             {
-                inventory[i] = new AbilitySlot();
-                inventory[i].abilityItem = abilityItem;
+                inventory[i].SetAbility(abilityItem);
 
                 Debug.Log($"Ability: {abilityItem.abilityID} zu Inventar-Slot {i} hinzugefügt!");
                 return true;
