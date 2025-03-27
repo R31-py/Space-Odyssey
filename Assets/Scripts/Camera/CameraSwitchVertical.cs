@@ -1,43 +1,44 @@
-    using UnityEngine;
-    using Cinemachine;
+using UnityEngine;
+using Cinemachine;
 
-    public class CameraSwitchVertical : MonoBehaviour
+public class CameraSwitchVertical : MonoBehaviour
+{
+    public CinemachineVirtualCamera cam1; // Assign Area A's camera
+    public CinemachineVirtualCamera cam2; // Assign Area B's camera
+    private CinemachineVirtualCamera _currentCam;
+
+    void Start()
     {
-        public CinemachineVirtualCamera cam1; // Assign Area A's camera
-        public CinemachineVirtualCamera cam2; // Assign Area B's camera
-        private CinemachineVirtualCamera _currentCam;
+        // Initialize with Cam1 (Area A's camera)
+        _currentCam = cam1;
+        cam1.enabled = true;
+        cam2.enabled = false;
+    }
 
-        void Start()
+    void OnTriggerExit2D(Collider2D other)
+    {
+        if (other.CompareTag("Player"))
         {
-            // Initialize with Cam1 (Area A's camera)
-            _currentCam = cam1;
-            cam1.enabled = true;
-            cam2.enabled = false;
-        }
+            // Calculate exit direction relative to the trigger
+            Vector3 exitDirection = other.transform.position - transform.position;
 
-        void OnTriggerExit2D(Collider2D other)
-        {
-            if (other.CompareTag("Player"))
+            // Switch cameras based on vertical exit direction
+            if (exitDirection.y > 0) 
             {
-                // Calculate exit direction relative to the trigger
-                Vector3 exitDirection = other.transform.position - transform.position;
-
-                // Switch cameras based on vertical exit direction
-                if (exitDirection.y > 0) // Moving up (A → B)
-                {
-                    SwitchCamera(cam2);
-                }
-                else if (exitDirection.y < 0) // Moving down (B → A)
-                {
-                    SwitchCamera(cam1);
-                }
+                SwitchCamera(cam1);
+            }
+            else if (exitDirection.y < 0) 
+            {
+                SwitchCamera(cam2);
             }
         }
-
-        private void SwitchCamera(CinemachineVirtualCamera newCam)
-        {
-            _currentCam.enabled = false;
-            newCam.enabled = true;
-            _currentCam = newCam;
-        }
     }
+
+    private void SwitchCamera(CinemachineVirtualCamera newCam)
+    {
+        _currentCam.enabled = false;
+        newCam.enabled = true;
+        _currentCam = newCam;
+    }
+}
+
