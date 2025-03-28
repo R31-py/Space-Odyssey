@@ -96,12 +96,12 @@ TextureImporter:
       name: fly_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 44
-        height: 92
+        x: 12
+        y: 37
+        width: 28
+        height: 17
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -117,12 +117,12 @@ TextureImporter:
       name: fly_1
       rect:
         serializedVersion: 2
-        x: 44
-        y: 0
-        width: 44
-        height: 92
+        x: 58
+        y: 37
+        width: 24
+        height: 18
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -138,12 +138,12 @@ TextureImporter:
       name: fly_2
       rect:
         serializedVersion: 2
-        x: 88
-        y: 0
-        width: 44
-        height: 92
+        x: 104
+        y: 36
+        width: 20
+        height: 21
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -159,12 +159,12 @@ TextureImporter:
       name: fly_3
       rect:
         serializedVersion: 2
-        x: 132
-        y: 0
-        width: 44
-        height: 92
+        x: 150
+        y: 29
+        width: 16
+        height: 20
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -180,12 +180,12 @@ TextureImporter:
       name: fly_4
       rect:
         serializedVersion: 2
-        x: 176
-        y: 0
-        width: 44
-        height: 92
+        x: 191
+        y: 28
+        width: 22
+        height: 22
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -201,12 +201,12 @@ TextureImporter:
       name: fly_5
       rect:
         serializedVersion: 2
-        x: 220
-        y: 0
-        width: 44
-        height: 92
+        x: 230
+        y: 38
+        width: 31
+        height: 15
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -222,12 +222,12 @@ TextureImporter:
       name: fly_6
       rect:
         serializedVersion: 2
-        x: 264
-        y: 0
-        width: 44
-        height: 92
+        x: 275
+        y: 37
+        width: 30
+        height: 17
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
