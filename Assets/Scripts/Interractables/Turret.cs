@@ -1,22 +1,22 @@
-using System.Collections;
 using UnityEngine;
+using System.Collections;
 
 public class Turret : MonoBehaviour
 {
-    [SerializeField] private GameObject laserPrefab; // Laser projectile
-    [SerializeField] private Transform firePoint; // Where the laser spawns
-    [SerializeField] private float fireRate = 3f; // Firing interval
-
-    [SerializeField] private GameObject explosionPrefab; // Explosion effect
-    [SerializeField] private AudioClip explosionSound; // Explosion sound effect
+    [Header("Shooting")]
+    [SerializeField] private GameObject bulletPrefab; // Renamed from laserPrefab for clarity
+    [SerializeField] private Transform firePoint;
+    [SerializeField] private float fireRate = 3f;
+    
+    [Header("Destruction")]
+    [SerializeField] private GameObject explosionPrefab;
+    [SerializeField] private AudioClip explosionSound;
+    
     private AudioSource audioSource;
+    private bool canShoot = false;
 
     private void Start()
     {
-        // Start shooting continuously
-        StartCoroutine(ShootRoutine());
-
-        // Get or add AudioSource component
         audioSource = GetComponent<AudioSource>();
         if (audioSource == null)
         {
@@ -24,18 +24,40 @@ public class Turret : MonoBehaviour
         }
     }
 
-    private void Shoot()
+    public void SetShootingState(bool state)
     {
-        if (laserPrefab != null && firePoint != null)
+        canShoot = state;
+        if (canShoot) StartCoroutine(ShootRoutine());
+        else StopAllCoroutines();
+    }
+
+    private IEnumerator ShootRoutine()
+    {
+        while (canShoot)
         {
-            Instantiate(laserPrefab, firePoint.position, Quaternion.identity);
-        }
-        else
-        {
-            Debug.LogWarning("LaserPrefab or FirePoint is not assigned!");
+            Shoot();
+            yield return new WaitForSeconds(fireRate);
         }
     }
 
+    private void Shoot()
+    {
+        if (bulletPrefab != null && firePoint != null)
+        {
+            // Instantiate bullet facing LEFT (180° rotation on Y-axis)
+            GameObject bullet = Instantiate(
+                bulletPrefab, 
+                firePoint.position, 
+                Quaternion.Euler(0f, 180f, 0f) // Rotate to face left
+            );
+        }
+        else
+        {
+            Debug.LogWarning("BulletPrefab or FirePoint is not assigned!");
+        }
+    }
+
+    // Rest of the code remains unchanged
     public void DestroyTurret()
     {
         Explode();
@@ -44,33 +66,13 @@ public class Turret : MonoBehaviour
 
     private void Explode()
     {
-        // Play explosion sound
         if (explosionSound != null)
         {
             AudioSource.PlayClipAtPoint(explosionSound, transform.position, 1.0f);
         }
-        else
-        {
-            Debug.LogWarning("ExplosionSound is not assigned!");
-        }
-
-        // Instantiate explosion effect
         if (explosionPrefab != null)
         {
             Instantiate(explosionPrefab, transform.position, Quaternion.identity);
-        }
-        else
-        {
-            Debug.LogWarning("ExplosionPrefab is not assigned!");
-        }
-    }
-
-    private IEnumerator ShootRoutine()
-    {
-        while (true)
-        {
-            Shoot();
-            yield return new WaitForSeconds(fireRate);
         }
     }
 }
