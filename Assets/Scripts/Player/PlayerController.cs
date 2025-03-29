@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerMovement : MonoBehaviour
+public class PlayerController : MonoBehaviour
 {
     [SerializeField] private float movementSpeed = 10;
     [SerializeField] private float maxJumpHeight = 0;
@@ -12,6 +12,10 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private LayerMask wallLayer;
     [SerializeField] private Animator animator;
     [SerializeField] private PlayerValues playerValues;
+    
+    [SerializeField] private GameObject slash_pfb;
+    [SerializeField] private GameObject shuriken_pfb;
+    
     public Rigidbody2D body;
     private float horizontalInput;
     private float gravity = 6f;
@@ -122,6 +126,30 @@ public class PlayerMovement : MonoBehaviour
         animator.SetBool("move", horizontalInput != 0);
         animator.SetBool("falling", !isGroundedValue);
         body.angularVelocity = 0;
+        
+        
+        /*if (Input.GetKeyDown(KeyCode.Z) && playerValues.Inventory[0] != null)
+        {
+            switch (playerValues.Inventory[0].abilityID)
+            {
+                case 1:
+                    SlashAbility();
+                    break;
+                case 2:
+                    ShurikenAbility();
+                    break;
+            }   
+        }*/
+        
+        if (Input.GetKeyDown(KeyCode.X))
+        {
+            ShurikenAbility();
+        }
+        
+        if (Input.GetKeyDown(KeyCode.Z))
+        {
+            SlashAbility();
+        }
     }
 
     private void jump()
@@ -181,5 +209,18 @@ public class PlayerMovement : MonoBehaviour
         return false;
         RaycastHit2D raycastHit = Physics2D.BoxCast(boxCollider2D.bounds.center, boxCollider2D.bounds.size, 0, new Vector2(transform.localScale.x, 0), 0.1f, wallLayer);
         return raycastHit.collider != null;
+    }
+    
+    public void SlashAbility()
+    {
+        animator.SetTrigger("attack");
+        Instantiate(slash_pfb, transform.position + new Vector3(0, -0.7f, 0), Quaternion.identity);
+        Debug.Log("Slash Ability");
+    } 
+        
+    public void ShurikenAbility()
+    {
+        Instantiate(shuriken_pfb, transform.position + new Vector3(0, -0.7f, 0), Quaternion.identity);
+        Debug.Log("Shuriken Ability");
     }
 }

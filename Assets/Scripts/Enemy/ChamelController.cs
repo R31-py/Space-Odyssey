@@ -6,9 +6,8 @@ public class ChamelController : Enemy
 {
     [SerializeField] private float deathTimer = 3f;
     [SerializeField] private float attackCooldown = 1.5f;
-    [SerializeField] private float chargeSpeed = 6f;
-    [SerializeField] private float chargeDuration = 0.7f;
-    [SerializeField] private float windUpTime = 0.5f; // Wind-up delay before charging
+    [SerializeField] private float dashSpeed = 6f;
+    [SerializeField] private float dashDuration = 0.2f;
 
     private float attackTimer = 0f;
     private int movingDirection = 1;
@@ -29,6 +28,16 @@ public class ChamelController : Enemy
 
     private void Update()
     {
+        if (dashDuration > 0)
+        {
+            dashDuration -= Time.deltaTime;
+            moveSpeed = dashSpeed;
+            animator.SetTrigger(attackAnimationName);
+        }else
+        {
+            moveSpeed = 3f;
+        }
+        
         if (isCharging) return; 
 
         if (canMove)
@@ -60,8 +69,6 @@ public class ChamelController : Enemy
         if (playerTransform == null) return;
         // Recalculate direction using the latest player position
         Vector2 chargeDirection = (playerTransform.position - transform.position).normalized;
-    
-        body.velocity = chargeDirection * chargeSpeed;
         
         animator.SetTrigger(attackAnimationName);
         Debug.Log("Chamel attacked with event!");

@@ -39,7 +39,19 @@ public class ShopController : MonoBehaviour
 
     public void BuyAbility(AbilityItem item)
     {
-        if (playerValues.money >= item.cost && inventoryController.HasFreeSlot()) 
+        if (playerValues.money >= item.cost && item.abilityID == 5)
+        {
+            playerValues.health += 1;
+
+            if (playerValues.health > playerValues.maxHealth)
+            {
+                playerValues.maxHealth += 1;
+            }
+            
+            playerValues.money -= item.cost;
+        }
+        
+        else if (playerValues.money >= item.cost && inventoryController.HasFreeSlot()) 
         {
             playerValues.money -= item.cost;
             Debug.Log($"Gekauft: {item.abilityID}");

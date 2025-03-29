@@ -6,29 +6,31 @@ public class Shuriken_Ability : MonoBehaviour
 {
     [SerializeField] private float speed = 10f;
     [SerializeField] private float lifetime = 10f;
+    private float direction;
+    private PlayerController player;
     private Animator animator;
-    private Transform transform;
+    
     private void Start()
     {
         Destroy(gameObject, lifetime);
         animator = GetComponent<Animator>();
-        transform = GetComponent<Transform>();
+        player = FindObjectOfType<PlayerController>(); 
+        
+        direction = player.transform.localScale.x;
+        
     }
 
     private void Update()
     {
-        
-        Vector3 currentPosition = transform.position;
+        transform.position += Vector3.right * (direction * speed * Time.deltaTime);
 
-        currentPosition.x += speed * Time.deltaTime;
-        
-        transform.position = currentPosition;
-        //Diese Animation rotiert das GameObject nach der z-Achse
+        // Diese Animation rotiert das Objekt nach der Z-Achse
         animator.Play("shuriken_spin");
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        Debug.Log("Collided with: " + collision.gameObject.name);
         if (collision.CompareTag("Enemy"))
         {
             Enemy enemy = collision.GetComponent<Enemy>();
@@ -36,11 +38,12 @@ public class Shuriken_Ability : MonoBehaviour
             {
                 enemy.lifepoints -= 4;
             }
-            Destroy(gameObject); 
+            Destroy(gameObject);
         }
         else if (collision.CompareTag("Wall"))
         {
-            Destroy(gameObject); 
+            Debug.Log("Shuriken hit the wall!");
+            Destroy(gameObject);
         }
     }
 }

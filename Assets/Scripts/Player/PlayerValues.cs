@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -8,10 +9,12 @@ public class PlayerValues : MonoBehaviour
     [SerializeField] public int health = 3;
     private int oldHealth = 3;
     [SerializeField] public int maxHealth;
+    
     [SerializeField] public GameObject player;
     public ParticleSystem damageParticle;
     
     public int money = 100;
+    public TextMeshProUGUI moneyText; // Assign this in Unity Inspector
     
     public KeyCode RIGHT = KeyCode.RightArrow;
     public KeyCode LEFT = KeyCode.LeftArrow;
@@ -32,6 +35,7 @@ public class PlayerValues : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        UpdateMoneyUI();
         
         if (oldHealth > health)
         {
@@ -48,5 +52,16 @@ public class PlayerValues : MonoBehaviour
         {
             player.SetActive(false);    
         }
+        
     }
+    
+    private void UpdateMoneyUI()
+    {
+        if (moneyText != null)
+        {
+            moneyText.text = money.ToString();
+        }
+    }
+
+     
 }
