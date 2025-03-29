@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class ShopController : MonoBehaviour
@@ -9,6 +10,7 @@ public class ShopController : MonoBehaviour
     public GameObject player;
     public InventoryController inventoryController;
     private PlayerValues playerValues;
+    public TextMeshProUGUI moneyText;
     
     private void Start()
     {
@@ -42,11 +44,18 @@ public class ShopController : MonoBehaviour
             playerValues.money -= item.cost;
             Debug.Log($"Gekauft: {item.abilityID}");
             inventoryController.Add(item);
+            
+            UpdateMoney();
         }
         else
         {
             Debug.Log("Nicht genug Geld oder kein freier Platz!");
         }
+    }
+
+    public void UpdateMoney()
+    {
+        moneyText.text = playerValues.money.ToString();
     }
     
 
