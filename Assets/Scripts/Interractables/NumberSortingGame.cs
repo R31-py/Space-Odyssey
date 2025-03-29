@@ -5,7 +5,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine.EventSystems;
-
 public class NumberSortingGame : MonoBehaviour
 {
     [Header("UI References")]
@@ -13,18 +12,16 @@ public class NumberSortingGame : MonoBehaviour
     public Transform buttonParent;
     public TMP_Text feedbackText;
     public Button checkOrderButton;
-    public Button resetButton;
     public GameObject minigamePanel;
-    public Image feedbackBackground; // Add in Inspector
+    public Image feedbackBackground;
 
     [Header("Objects to Destroy")]
     public GameObject[] objectsToDestroy = new GameObject[4];
 
     [Header("Button Settings")]
-    public Color normalColor = Color.white;
-    public Color hoverColor = Color.gray;
-    public Color clickColor = new Color(0.8f, 0.9f, 1f);
     [Range(0.1f, 0.3f)] public float spacingRatio = 0.15f;
+    public Color hoverTextColor = new Color(0.7f, 0.7f, 0.7f);
+    public Color hoverImageColor = new Color(0.85f, 0.85f, 0.85f);
 
     private List<int> numbers = new List<int>();
     private bool playerInTrigger = false;
@@ -38,7 +35,6 @@ public class NumberSortingGame : MonoBehaviour
         minigamePanel.SetActive(false);
         feedbackBackground.gameObject.SetActive(false);
         checkOrderButton.onClick.AddListener(CheckOrder);
-        resetButton.onClick.AddListener(ResetGame);
     }
 
     void Update()
@@ -70,13 +66,16 @@ public class NumberSortingGame : MonoBehaviour
         if (gridLayout == null) return;
 
         RectTransform parentRect = buttonParent.GetComponent<RectTransform>();
-        float usableWidth = parentRect.rect.width - gridLayout.padding.left - gridLayout.padding.right;
-        
-        float cellWidth = (usableWidth - (gridLayout.spacing.x * (gridLayout.constraintCount - 1))) / gridLayout.constraintCount;
-        float cellHeight = cellWidth * 0.7f;
-        
+        float totalPadding = gridLayout.padding.left + gridLayout.padding.right;
+        float usableWidth = parentRect.rect.width - totalPadding;
+    
+        int columns = gridLayout.constraintCount;
+        float totalSpacing = gridLayout.spacing.x * (columns - 1);
+        float cellWidth = (usableWidth - totalSpacing) / columns;
+        float cellHeight = cellWidth * 0.6f;
+
         gridLayout.cellSize = new Vector2(cellWidth, cellHeight);
-        gridLayout.spacing = new Vector2(cellWidth * spacingRatio, cellWidth * spacingRatio);
+        gridLayout.spacing = new Vector2(cellWidth * spacingRatio, gridLayout.spacing.y);
     }
 
     void GenerateNumbers()
@@ -89,22 +88,21 @@ public class NumberSortingGame : MonoBehaviour
             Button btn = newButton.GetComponent<Button>();
             TMP_Text btnText = btn.GetComponentInChildren<TMP_Text>();
             btnText.text = num.ToString();
-            
-            btn.image.color = normalColor;
-            
-            var hoverHandler = btn.gameObject.AddComponent<ButtonHoverHandler>();
-            hoverHandler.Initialize(btn, normalColor, hoverColor);
-            
-            btn.onClick.AddListener(() => StartCoroutine(OnButtonClicked(btn)));
+
+            // Add and configure hover effect
+            ButtonHoverEffect hoverEffect = newButton.AddComponent<ButtonHoverEffect>();
+            hoverEffect.buttonText = btnText;  // Now works because buttonText is public
+            hoverEffect.buttonImage = btn.image;
+            hoverEffect.hoverTextColor = hoverTextColor;
+            hoverEffect.hoverImageColor = hoverImageColor;
+
+            btn.onClick.AddListener(() => OnButtonClicked(btn));
         }
     }
 
-    IEnumerator OnButtonClicked(Button btn)
+    void OnButtonClicked(Button btn)
     {
-        btn.image.color = clickColor;
         btn.transform.SetAsLastSibling();
-        yield return new WaitForSecondsRealtime(0.2f);
-        btn.image.color = normalColor;
     }
 
     void CheckOrder()
@@ -115,7 +113,6 @@ public class NumberSortingGame : MonoBehaviour
 
         if (currentOrder.SequenceEqual(Enumerable.Range(1, 10)))
         {
-            // Correct order handling (unchanged)
             feedbackText.text = "<size=70><color=#00FF00>Correct!</color></size>";
             feedbackText.alignment = TextAlignmentOptions.Center;
             feedbackBackground.gameObject.SetActive(true);
@@ -127,34 +124,14 @@ public class NumberSortingGame : MonoBehaviour
         }
         else
         {
-            // Modify the "Try Again" feedback
             feedbackText.text = "<size=70><color=#FF0000>Try Again!</color></size>";
-            feedbackText.alignment = TextAlignmentOptions.Center; // Ensure text is centered
-            
-            // Ensure the background is visible and properly sized
+            feedbackText.alignment = TextAlignmentOptions.Center;
             feedbackBackground.gameObject.SetActive(true);
-            
-            // Optionally, set background to white if needed
             feedbackBackground.color = Color.white;
-            
             StartCoroutine(ResetAfterFeedback(1.5f));
         }
     }
-    void ConfigureFeedbackDisplay()
-    {
-        if (feedbackText != null && feedbackBackground != null)
-        {
-            // Ensure the background matches the text size
-            RectTransform textRect = feedbackText.GetComponent<RectTransform>();
-            RectTransform backgroundRect = feedbackBackground.GetComponent<RectTransform>();
-            
-            // Optional: Adjust background size to match text
-            backgroundRect.sizeDelta = textRect.sizeDelta * 1.2f; // Add some padding
-            
-            // Ensure they're positioned together
-            backgroundRect.position = textRect.position;
-        }
-    }
+
     IEnumerator HideFeedbackAfterDelay(float delay)
     {
         yield return new WaitForSecondsRealtime(delay);
@@ -167,7 +144,9 @@ public class NumberSortingGame : MonoBehaviour
         yield return new WaitForSecondsRealtime(delay);
         feedbackBackground.gameObject.SetActive(false);
         feedbackText.text = "";
-        ResetGame();
+        ClearButtons();
+        GenerateNumbers();
+        UpdateButtonLayout();
     }
 
     void ActivateMinigame()
@@ -206,13 +185,6 @@ public class NumberSortingGame : MonoBehaviour
             Destroy(child.gameObject);
     }
 
-    public void ResetGame()
-    {
-        ClearButtons();
-        GenerateNumbers();
-        UpdateButtonLayout();
-    }
-
     public void DestroyAssignedObjects()
     {
         foreach (var obj in objectsToDestroy)
@@ -220,26 +192,38 @@ public class NumberSortingGame : MonoBehaviour
     }
 }
 
-public class ButtonHoverHandler : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
+[RequireComponent(typeof(Button))]
+public class ButtonHoverEffect : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
-    private Button button;
-    private Color normalColor;
-    private Color hoverColor;
+    [Header("Component References")]
+    public TMP_Text buttonText;  
+    public Image buttonImage;     
+    
+    [Header("Hover Settings")]
+    public Color hoverTextColor = Color.gray;
+    public Color hoverImageColor = new Color(0.9f, 0.9f, 0.9f);
 
-    public void Initialize(Button btn, Color normalCol, Color hoverCol)
+    private Color normalTextColor;
+    private Color normalImageColor;
+
+    void Awake()
     {
-        button = btn;
-        normalColor = normalCol;
-        hoverColor = hoverCol;
+        if (buttonText == null) buttonText = GetComponentInChildren<TMP_Text>();
+        if (buttonImage == null) buttonImage = GetComponent<Image>();
+        
+        normalTextColor = buttonText.color;
+        normalImageColor = buttonImage.color;
     }
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        if (button != null) button.image.color = hoverColor;
+        buttonText.color = hoverTextColor;
+        buttonImage.color = hoverImageColor;
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        if (button != null) button.image.color = normalColor;
+        buttonText.color = normalTextColor;
+        buttonImage.color = normalImageColor;
     }
 }

@@ -11,7 +11,7 @@ public class CameraManager : MonoBehaviour
     [Header("Controls for lerping the Y Damping during player jump/fall")]
     [SerializeField] private float _fallPanAmount = 0.25f;
     [SerializeField] private float _fallYPanTime = 0.35f;
-    [SerializeField] private float _fallSpeedYDampingChangeThreshold = -15f;
+    
 
     private CinemachineVirtualCamera _currentCamera;
     private CinemachineFramingTransposer _framingTransposer;
