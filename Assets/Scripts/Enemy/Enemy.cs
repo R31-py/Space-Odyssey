@@ -16,6 +16,7 @@ public class  Enemy : MonoBehaviour, IEnemy
     public float attackRange;
     public float triggerRange;
     public int lifepoints;
+    protected bool isDead = false;
     
     public bool canMove = true;
     public bool targetInSight;
@@ -27,10 +28,10 @@ public class  Enemy : MonoBehaviour, IEnemy
     public String deathAnimationName;
     public String attackAnimationName;
     public String moveAnimationName;
-    public float[] enemyBoundry = { 100,100 };
+    [SerializeField] private float[] enemyBoundry = { 100,100 };
     public float startX;
 
-    public void Start()
+    protected virtual void Start()
     {
         startX=transform.position.x;
     }
@@ -42,7 +43,7 @@ public class  Enemy : MonoBehaviour, IEnemy
     }
 
     public virtual void Move(float direction)
-    {
+    {   
         // Corrected boundary check
         if (transform.position.x > startX - enemyBoundry[0] && transform.position.x < startX + enemyBoundry[1])
         {
@@ -96,18 +97,24 @@ public class  Enemy : MonoBehaviour, IEnemy
             Trigger();   
     }
 
-    public void getHit(int amount)
+    public virtual void getHit(int amount)
     {
+        if(isDead) return;
+        
         lifepoints -= amount;
         if (lifepoints <= 0)
         {
-            Destroy(gameObject);
+            isDead = true;
+            animator.SetTrigger(deathAnimationName);
+            Destroy(gameObject, 1f); // Give time for death animation
         }
     }
 
-    private  void Update()
+    protected virtual void Update()
     {
-        if (canSee(target) && !target.tag.Equals("Player"))
+        if (isDead) return;
+
+        if (canSee(target) && !target.tag.Equals("Player"))// Removed incorrect player tag check
         {
             targetInSight = true;
         }
