@@ -96,10 +96,10 @@ TextureImporter:
       name: damaged_0
       rect:
         serializedVersion: 2
-        x: 9
-        y: 6
-        width: 17
-        height: 16
+        x: 0
+        y: 0
+        width: 106
+        height: 22
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -117,10 +117,10 @@ TextureImporter:
       name: damaged_1
       rect:
         serializedVersion: 2
-        x: 115
-        y: 5
-        width: 16
-        height: 16
+        x: 106
+        y: 0
+        width: 106
+        height: 22
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
