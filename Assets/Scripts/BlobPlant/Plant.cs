@@ -9,7 +9,6 @@ public class Plant : Enemy
     
     private float attackTimer = 0f;
     private Transform playerTransform;
-    private bool playerDetected = false;
 
     private void Awake()
     {
@@ -18,27 +17,19 @@ public class Plant : Enemy
 
     private void Start()
     {
-        attackTimer = attackCooldown; // Ensures the plant doesn't shoot immediately
+        attackTimer = 0f;
     }
 
     private void Update()
     {
-        if (playerTransform == null) return;
-
-        float distanceToPlayer = Vector2.Distance(transform.position, playerTransform.position);
-        playerDetected = distanceToPlayer <= detectionRange;
-
-        if (playerDetected)
+        attackTimer -= Time.deltaTime;
+        if (canSee(target) && attackTimer <= 0f)
         {
-            attackTimer -= Time.deltaTime;
-            if (attackTimer <= 0)
-            {
-                attackTimer = attackCooldown; // Reset cooldown (ShootProjectile is now called only via animation event)
-            }
+            ShootProjectile();
+            attackTimer = attackCooldown;
         }
     }
 
-    // Ensure this method is correctly linked in the animation event
     private void ShootProjectile()
     {
         Debug.Log("Plant is shooting a projectile!");
@@ -49,7 +40,7 @@ public class Plant : Enemy
             PlantAttack attackScript = projectile.GetComponent<PlantAttack>();
             if (attackScript != null)
             {
-                attackScript.SetTarget(playerTransform.position);
+                attackScript.SetTarget(target.transform.position);
             }
         }
     }

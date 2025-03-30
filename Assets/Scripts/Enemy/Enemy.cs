@@ -16,6 +16,7 @@ public class  Enemy : MonoBehaviour, IEnemy
     public float attackRange;
     public float triggerRange;
     public int lifepoints;
+    public int dropmoney;
     protected bool isDead = false;
     
     public bool canMove = true;
@@ -23,11 +24,13 @@ public class  Enemy : MonoBehaviour, IEnemy
 
     public Rigidbody2D body;
     public Animator animator;
+    private PlayerValues player;
     
     public String[] enemyLayer;
     public String deathAnimationName;
     public String attackAnimationName;
     public String moveAnimationName;
+    [SerializeField] private ParticleSystem deathParticles;
     [SerializeField] private float[] enemyBoundry = { 100,100 };
     public float startX;
 
@@ -105,6 +108,8 @@ public class  Enemy : MonoBehaviour, IEnemy
         if (lifepoints <= 0)
         {
             isDead = true;
+            player.money += dropmoney;
+            deathParticles.Play();
             animator.SetTrigger(deathAnimationName);
             Destroy(gameObject, 1f); // Give time for death animation
         }

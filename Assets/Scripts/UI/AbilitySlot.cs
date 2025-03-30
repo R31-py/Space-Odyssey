@@ -29,4 +29,12 @@ public class AbilitySlot : MonoBehaviour
             image.sprite = null;
         }
     }
+    
+    public void UnsetAbility()
+    {
+        abilityItem = null;
+        isEmpty = true;
+        image.sprite = null;
+    }
+    
 }
