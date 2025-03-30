@@ -105,13 +105,14 @@ public class  Enemy : MonoBehaviour, IEnemy
         if(isDead) return;
         
         lifepoints -= amount;
+        
         if (lifepoints <= 0)
         {
             isDead = true;
             player.money += dropmoney;
             deathParticles.Play();
             animator.SetTrigger(deathAnimationName);
-            Destroy(gameObject, 1f); // Give time for death animation
+            Destroy(gameObject, 5f); // Give time for death animation
         }
     }
 

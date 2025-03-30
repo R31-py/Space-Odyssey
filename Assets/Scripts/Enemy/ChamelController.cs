@@ -8,11 +8,14 @@ public class ChamelController : Enemy
     [SerializeField] private float attackCooldown = 1.5f;
     [SerializeField] private float dashSpeed = 6f;
     [SerializeField] private float dashDuration = 0.2f;
+    [SerializeField] public PlayerValues player;
 
     private float attackTimer = 0f;
     private int movingDirection = 1;
     private bool playerDetected = false;
     private bool isCharging = false;
+    private float currentHitCooldown = 0f;
+
     
     private Transform playerTransform;
     private Rigidbody2D body;
@@ -43,7 +46,6 @@ public class ChamelController : Enemy
             if (attackTimer <= 0)
             {
                 Attack();
-                attackTimer = attackCooldown;
             }
         }
 
@@ -89,13 +91,13 @@ public class ChamelController : Enemy
         }
     }
 
-    private void OnCollisionEnter2D(Collision2D other)
+    private void OnCollisionStay2D(Collision2D other)
     {
-        if (isCharging && (other.gameObject.CompareTag("Wall") || other.gameObject.CompareTag("Player")))
+        if (other.gameObject.CompareTag("Player") && attackTimer <= 0)
         {
-            body.velocity = Vector2.zero; // Stop charge on collision
-            isCharging = false;
-            canMove = true;
+            Debug.Log(currentHitCooldown);
+            player.health -= 1;
+            attackTimer = attackCooldown;
         }
 
         if (other.gameObject.CompareTag("Wall"))
