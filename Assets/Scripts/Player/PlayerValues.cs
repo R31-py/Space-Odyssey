@@ -6,6 +6,8 @@ using UnityEngine;
 
 public class PlayerValues : MonoBehaviour
 {
+    public static PlayerValues Instance;
+    
     [SerializeField] public int health = 3;
     private int oldHealth = 3;
     [SerializeField] public int maxHealth;
@@ -26,6 +28,18 @@ public class PlayerValues : MonoBehaviour
     
     // Tutorial Variables
     [SerializeField] public int tutorialStage = 0;
+    
+    private void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Debug.LogWarning("A duplicate PlayerValues was found and destroyed.");
+            Destroy(gameObject); 
+            return; 
+        }
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
+    }
     
     void Start()
     {

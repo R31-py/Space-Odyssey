@@ -37,6 +37,7 @@ public class  Enemy : MonoBehaviour, IEnemy
     protected virtual void Start()
     {
         startX=transform.position.x;
+        player = target.GetComponent<PlayerValues>();
     }
     
     
@@ -108,10 +109,11 @@ public class  Enemy : MonoBehaviour, IEnemy
         if (lifepoints <= 0)
         {
             isDead = true;
-            deathParticles.Play();
+            ParticleSystem particlesInstance = Instantiate(deathParticles, transform.position, Quaternion.identity);
+            particlesInstance.Play();
             animator.SetTrigger(deathAnimationName);
-            Destroy(gameObject, 1f);
-            player.money += dropmoney; // Give time for death animation
+            player.money += dropmoney;
+            Destroy(gameObject, 3f);
         }
     }
 
