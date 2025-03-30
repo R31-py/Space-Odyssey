@@ -41,15 +41,15 @@ AnimationClip:
       - serializedVersion: 3
         time: 0.33333334
         value: -1.135633
-        inSlope: 0.09910393
-        outSlope: 0.09910393
+        inSlope: 0
+        outSlope: 0
         tangentMode: 136
         weightedMode: 0
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 0.6666667
-        value: 0.11848736
+        value: -1.1554992
         inSlope: 0
         outSlope: 0
         tangentMode: 136
@@ -96,15 +96,15 @@ AnimationClip:
       - serializedVersion: 3
         time: 0.33333334
         value: 0.6575613
-        inSlope: 0.19820786
-        outSlope: 0.19820786
+        inSlope: 0
+        outSlope: 0
         tangentMode: 136
         weightedMode: 0
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 0.6666667
-        value: 3.165802
+        value: 0.61782885
         inSlope: 0
         outSlope: 0
         tangentMode: 136
@@ -240,15 +240,15 @@ AnimationClip:
       - serializedVersion: 3
         time: 0.33333334
         value: -1.135633
-        inSlope: 0.09910393
-        outSlope: 0.09910393
+        inSlope: 0
+        outSlope: 0
         tangentMode: 136
         weightedMode: 0
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 0.6666667
-        value: 0.11848736
+        value: -1.1554992
         inSlope: 0
         outSlope: 0
         tangentMode: 136
@@ -295,15 +295,15 @@ AnimationClip:
       - serializedVersion: 3
         time: 0.33333334
         value: 0.6575613
-        inSlope: 0.19820786
-        outSlope: 0.19820786
+        inSlope: 0
+        outSlope: 0
         tangentMode: 136
         weightedMode: 0
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 0.6666667
-        value: 3.165802
+        value: 0.61782885
         inSlope: 0
         outSlope: 0
         tangentMode: 136
@@ -329,4 +329,11 @@ AnimationClip:
   m_EulerEditorCurves: []
   m_HasGenericRootTransform: 0
   m_HasMotionFloatCurves: 0
-  m_Events: []
+  m_Events:
+  - time: 0.6666667
+    functionName: ShootPlayer
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0
