@@ -5,37 +5,38 @@ public class MuzzleController : MonoBehaviour
     [Header("References")]
     public Transform firePoint;
     public GameObject bulletPrefab;
-    public Transform player;
-    public FlyingBot flyingBot;
-
+    
     [Header("Settings")]
     public float fireRate = 0.5f;
     public float bulletSpeed = 10f;
     public float rotationSpeed = 5f;
 
     private float nextFireTime;
+    private FlyingBot parentEnemy;
+    private Transform target;
 
     void Start()
     {
-        if (player == null)
-            player = GameObject.FindGameObjectWithTag("Player").transform;
+        parentEnemy = GetComponentInParent<FlyingBot>();
         
-        if (flyingBot == null)
-            flyingBot = GetComponentInParent<FlyingBot>();
+        if (parentEnemy != null)
+        {
+            target = parentEnemy.target?.transform;
+        }
     }
 
     void Update()
     {
-        if (player == null || !flyingBot.isShooting) return;
+        if (parentEnemy == null || target == null || !parentEnemy.targetInSight) return;
 
-        FacePlayer();
+        FaceTarget();
         HandleShooting();
     }
 
-    void FacePlayer()
+    void FaceTarget()
     {
-        Vector2 direction = player.position - transform.position;
-        direction.x *= flyingBot.FacingDirection; // Account for flip
+        Vector2 direction = target.position - transform.position;
+        direction.x *= parentEnemy.FacingDirection; // Account for flip
         
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
         Quaternion targetRotation = Quaternion.Euler(0, 0, angle);
@@ -59,12 +60,13 @@ public class MuzzleController : MonoBehaviour
     {
         if (bulletPrefab == null || firePoint == null) return;
 
-        Vector2 shootDirection = firePoint.right * flyingBot.FacingDirection;
+        Vector2 shootDirection = firePoint.right * parentEnemy.FacingDirection;
         GameObject bullet = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
         
-        if (bullet.TryGetComponent(out Rigidbody2D rb))
+        // Set up the bullet with the required properties
+        if (bullet.TryGetComponent(out Bullet enemyBullet))
         {
-            rb.velocity = shootDirection * bulletSpeed;
+            enemyBullet.Initialize(shootDirection, bulletSpeed);
         }
     }
 }
