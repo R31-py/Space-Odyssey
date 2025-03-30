@@ -1,37 +1,81 @@
 using System.Collections;
 using UnityEngine;
 
-public class FlyingEnemy : MonoBehaviour
+public class FlyingEnemy : Enemy
 {
     [SerializeField] private float detectionRange = 5f;
-    [SerializeField] private float attackRange = 1.5f;
-    [SerializeField] private float moveSpeed = 2f;
-    [SerializeField] private int health = 1;
     [SerializeField] private float hitCooldown = 1f;
-    [SerializeField] private PlayerValues player;
-
-    private Rigidbody2D body;
-    private Animator animator;
-    private Transform playerTransform;
+    
     private float currentHitCooldown = 0f;
     private bool playerDetected = false;
     private bool isAttacking = false;
-    private bool isDead = false;
     private bool isFlying = false;
 
-    private void Awake()
+    protected override void Start()
     {
+        base.Start();
+    
+        // Initialize components
         body = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
-        playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
+        target = GameObject.FindGameObjectWithTag("Player");
+    
+        // Setup animation names
+        deathAnimationName = "Death";
+        attackAnimationName = "Bite";
+        moveAnimationName = "Fly";
+    
+        // Diagnostic check for Rigidbody2D
+        if (body != null) {
+            Debug.Log($"[Bat] Rigidbody2D initialized: Type={body.bodyType}, Gravity={body.gravityScale}");
+        
+            // Ensure appropriate settings for flying
+            body.gravityScale = 0f;
+            body.freezeRotation = true;
+        } else {
+            Debug.LogError("[Bat] No Rigidbody2D found!");
+        }
+    
+        // Diagnostic check for Animator
+        if (animator != null) {
+            Debug.Log("[Bat] Animator initialized");
+        } else {
+            Debug.LogError("[Bat] No Animator found!");
+        }
+    }
+    
+    private void MoveTowardsPlayer()
+    {
+        if (target == null) return;
+    
+        Vector2 direction = (target.transform.position - transform.position).normalized;
+    
+        // Apply velocity directly
+        body.velocity = new Vector2(direction.x * moveSpeed, direction.y * moveSpeed);
+    
+        // Debug the movement
+        Debug.Log($"[Bat] Moving: Direction={direction}, Velocity={body.velocity}, Position={transform.position}");
+    
+        // Flip sprite based on movement direction
+        transform.localScale = new Vector3(direction.x > 0 ? 1 : -1, 1, 1);
     }
 
-    private void Update()
+    protected override void Update()
     {
-        if (isDead) return;
+        if (isDead) {
+            Debug.Log("[Bat] Dead, not updating");
+            return;
+        }
 
-        float distanceToPlayer = Vector2.Distance(transform.position, playerTransform.position);
+        if (target == null)
+        {
+            target = GameObject.FindGameObjectWithTag("Player");
+            if (target == null) return; // Safety check
+        }
+
+        float distanceToPlayer = Vector2.Distance(transform.position, target.transform.position);
         
+        // Detection logic
         if (distanceToPlayer <= detectionRange && !playerDetected)
         {
             playerDetected = true;
@@ -39,69 +83,101 @@ public class FlyingEnemy : MonoBehaviour
             StartCoroutine(StartFlying());
         }
 
+        // Movement logic when flying
         if (isFlying && !isAttacking)
         {
             MoveTowardsPlayer();
         }
         
-        if (distanceToPlayer <= attackRange && !isAttacking)
+        // Attack logic
+        if (distanceToPlayer <= attackRange && !isAttacking && isFlying)
         {
             StartCoroutine(AttackPlayer());
         }
         
+        // Cooldown logic
         if (currentHitCooldown < hitCooldown)
         {
             currentHitCooldown += Time.deltaTime;
+        }
+        
+        if (isFlying) {
+            Debug.Log($"[Bat] Flying state active, attacking={isAttacking}, velocity={body.velocity}");
         }
     }
 
     private IEnumerator StartFlying()
     {
-        yield return new WaitForSeconds(0.5f);
-        
-        isFlying = true;
+        // First set Detected to true to trigger the first transition (bat → bat-idle-to-fly)
+        animator.SetBool("Detected", true);
+    
+        // Wait for the transition to happen
+        yield return new WaitForSeconds(0.1f);
+    
+        // Now set Fly to true to trigger the second transition (bat-idle-to-fly → bat fly)
         animator.SetBool("Fly", true);
-        //
+    
+        // Then reset Detected to prevent going back
         animator.SetBool("Detected", false);
+    
+        yield return new WaitForSeconds(0.1f);
+    
+        // Now we should be in flying state
+        isFlying = true;
+    
+        Debug.Log("Bat should now be in flying state!");
     }
-
-    private void MoveTowardsPlayer()
-    {
-        Vector2 direction = (playerTransform.position - transform.position).normalized;
-        body.velocity = new Vector2(direction.x * moveSpeed, direction.y * moveSpeed);
-
-        transform.localScale = new Vector3(direction.x > 0 ? 1 : -1, 1, 1);
-    }
+    
 
     private IEnumerator AttackPlayer()
     {
         isAttacking = true;
-
-        animator.SetTrigger("Bite");
-
+        
+        // Stop movement during attack
         body.velocity = Vector2.zero;
+
+        // Use the animator trigger
+        animator.SetTrigger(attackAnimationName);
 
         yield return new WaitForSeconds(0.5f);
 
-        if (Vector2.Distance(transform.position, playerTransform.position) <= attackRange)
+        // Check if still in range after attack animation
+        if (target != null && Vector2.Distance(transform.position, target.transform.position) <= attackRange)
         {
-            player.health -= 1;
+            // Get player component and damage it safely
+            PlayerValues playerValues = target.GetComponent<PlayerValues>();
+            if (playerValues != null)
+            {
+                playerValues.health -= 1;
+            }
         }
 
+        yield return new WaitForSeconds(0.5f); // Small cooldown after attack
         isAttacking = false;
     }
 
-    public void TakeDamage()
+    // Override base class getHit method
+    public override void getHit(int amount)
     {
         if (isDead) return;
 
-        isDead = true;
-        isFlying = false;
-        body.velocity = Vector2.zero;
-        
-        animator.SetTrigger("Death");
-        GetComponent<Collider2D>().enabled = false;
-        
-        Destroy(gameObject, 1f);
+        lifepoints -= amount;
+        if (lifepoints <= 0)
+        {
+            // Use death logic and parameters matching state machine
+            isDead = true;
+            isFlying = false;
+            body.velocity = Vector2.zero;
+            
+            animator.SetTrigger(deathAnimationName);
+            GetComponent<Collider2D>().enabled = false;
+            
+            Destroy(gameObject, 1f);
+        }
     }
+    
+    // Override these methods to completely disable the base behavior
+    public override void Attack() { /* Empty to disable base behavior */ }
+    public override void Move(float direction) { /* Empty to disable base behavior */ }
+    public override void Trigger() { /* Empty to disable base behavior */ }
 }
