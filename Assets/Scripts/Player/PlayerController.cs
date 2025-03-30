@@ -12,9 +12,13 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private LayerMask wallLayer;
     [SerializeField] private Animator animator;
     [SerializeField] private PlayerValues playerValues;
+    [SerializeField] private InventoryController inventoryController;
     
     [SerializeField] private GameObject slash_pfb;
     [SerializeField] private GameObject shuriken_pfb;
+    [SerializeField] private GameObject shield_pfb;
+    private GameObject activeShield;
+
     
     public Rigidbody2D body;
     private float horizontalInput;
@@ -127,15 +131,60 @@ public class PlayerController : MonoBehaviour
         animator.SetBool("falling", !isGroundedValue && !isAttacking);
         body.angularVelocity = 0;
 
-        if (Input.GetKeyDown(KeyCode.X))
+        if (Input.GetKeyDown(KeyCode.Z) && playerValues.Inventory[0] != null)
         {
-            ShurikenAbility();
+            switch (playerValues.Inventory[0].abilityID) 
+            {
+                case 1:
+                    SlashAbility();
+                    break;
+                case 2:
+                    ShurikenAbility();
+                    break;
+                case 3:
+                    ShieldAbility();
+                    break;
+            }
+            
+            inventoryController.Remove(0);
         }
-
-        if (Input.GetKeyDown(KeyCode.Z))
+        
+        if (Input.GetKeyDown(KeyCode.X) && playerValues.Inventory[1] != null)
         {
-            SlashAbility();
+            switch (playerValues.Inventory[1].abilityID) 
+            {
+                case 1:
+                    SlashAbility();
+                    break;
+                case 2:
+                    ShurikenAbility();
+                    break;
+                case 3:
+                    ShieldAbility();
+                    break;
+            }
+            
+            inventoryController.Remove(1);
         }
+        
+        if (Input.GetKeyDown(KeyCode.C) && playerValues.Inventory[2] != null)
+        {
+            switch (playerValues.Inventory[2].abilityID) 
+            {
+                case 1:
+                    SlashAbility();
+                    break;
+                case 2:
+                    ShurikenAbility();
+                    break;
+                case 3:
+                    ShieldAbility();
+                    break;
+            }
+            
+            inventoryController.Remove(2);
+        }
+        
     }
 
     private IEnumerator Attack()
@@ -227,6 +276,12 @@ public class PlayerController : MonoBehaviour
     public void ShurikenAbility()
     {
         Instantiate(shuriken_pfb, transform.position + new Vector3(0, -0.7f, 0), Quaternion.identity);
+    }
+
+    void ShieldAbility()
+    {
+        activeShield = Instantiate(shield_pfb, transform.position + new Vector3(0, -0.4f, 0), Quaternion.identity, transform);
+        activeShield.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
     }
     
 }
