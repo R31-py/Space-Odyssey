@@ -20,6 +20,7 @@ public class PlantAttack : MonoBehaviour
     private void Update()
     {
         transform.position += targetDirection * (speed * Time.deltaTime);
+        Debug.Log($"Projectile moving in direction: {targetDirection}");
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -33,7 +34,7 @@ public class PlantAttack : MonoBehaviour
             }
             Destroy(gameObject);
         }
-        else if (collision.CompareTag("Wall"))
+        else if (collision.CompareTag("Ground"))
         {
             Destroy(gameObject);
         }
