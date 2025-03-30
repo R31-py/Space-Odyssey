@@ -28,15 +28,6 @@ public class ChamelController : Enemy
 
     private void Update()
     {
-        if (dashDuration > 0)
-        {
-            dashDuration -= Time.deltaTime;
-            moveSpeed = dashSpeed;
-            animator.SetTrigger(attackAnimationName);
-        }else
-        {
-            moveSpeed = 3f;
-        }
         
         if (isCharging) return; 
 
@@ -69,6 +60,16 @@ public class ChamelController : Enemy
         if (playerTransform == null) return;
         // Recalculate direction using the latest player position
         Vector2 chargeDirection = (playerTransform.position - transform.position).normalized;
+        
+        if (dashDuration > 0)
+        {
+            dashDuration -= Time.deltaTime;
+            moveSpeed = dashSpeed;
+            animator.SetTrigger(attackAnimationName);
+        }else
+        {
+            moveSpeed = 3f;
+        }
         
         animator.SetTrigger(attackAnimationName);
         Debug.Log("Chamel attacked with event!");

@@ -31,7 +31,7 @@ public class Shuriken_Ability : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         Debug.Log("Collided with: " + collision.gameObject.name);
-        if (collision.CompareTag("Enemy"))
+        if (collision.CompareTag("Enemy") && collision is BoxCollider2D)
         {
             Enemy enemy = collision.GetComponent<Enemy>();
             if (enemy != null)

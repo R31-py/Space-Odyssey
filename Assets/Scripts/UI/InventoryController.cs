@@ -5,12 +5,7 @@ using UnityEngine;
 public class InventoryController : MonoBehaviour
 {
     public AbilitySlot[] inventory = new AbilitySlot[3];
-    private PlayerValues playerValues;
-
-    void Start()
-    {
-        playerValues = GetComponent<PlayerValues>();
-    }
+    public PlayerValues playerValues;
 
     public bool HasFreeSlot()
     {
@@ -28,13 +23,20 @@ public class InventoryController : MonoBehaviour
             if (inventory[i].isEmpty)
             {
                 inventory[i].SetAbility(abilityItem);
+                playerValues.Inventory[i] = abilityItem;
 
                 Debug.Log($"Ability: {abilityItem.abilityID} zu Inventar-Slot {i} hinzugefügt!");
                 return true;
             }
         }
 
-        Debug.Log("Inventar ist voll!");
         return false;
+        Debug.Log("Inventar ist voll!");
+    }
+    
+    public void Remove(int id)
+    {
+        inventory[id].UnsetAbility();
+        playerValues.Inventory[id] = null;
     }
 }

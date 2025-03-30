@@ -5,17 +5,24 @@ using UnityEngine;
 
 public class Invisibility : MonoBehaviour
 {
-    public GameObject invisibilityIndicator;
-    
-    // Start is called before the first frame update
+    [SerializeField] private GameObject player;
+    public float lifetime = 3f;
+    private string originalTag;
+
     void Start()
     {
+        if (player != null)
+        {
+            originalTag = player.tag;
+            player.tag = "PlayerInvisible"; 
+            StartCoroutine(RevertInvisibility());
+        }
     }
 
-    // Update is called once per frame
-    void Update()
+    private IEnumerator RevertInvisibility()
     {
-        gameObject.tag = "PlayerInvisible";
-        invisibilityIndicator.SetActive(true);
+        yield return new WaitForSeconds(lifetime);
+        if (player != null) player.tag = originalTag; 
+        Destroy(gameObject);
     }
 }

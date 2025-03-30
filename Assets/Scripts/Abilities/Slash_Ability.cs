@@ -33,7 +33,7 @@ public class Slash_Ability : MonoBehaviour
             Enemy enemy = collision.GetComponent<Enemy>();
             if (enemy != null)
             {
-                enemy.lifepoints -= 2;
+                enemy.lifepoints -= 1;
             }
         }
         else if (collision.CompareTag("Wall"))

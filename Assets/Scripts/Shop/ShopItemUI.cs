@@ -11,11 +11,6 @@ public class ShopItemUI : MonoBehaviour
     
     public void OnBuyButtonClicked()
     {
-        if (abilityItem.abilityID == 5)
-        {
-            
-        }
-        // Find the ShopController in the scene and call BuyAbility with this item's abilityItem
         ShopController shopController = FindObjectOfType<ShopController>();
         if (shopController != null)
         {
