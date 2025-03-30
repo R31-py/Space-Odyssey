@@ -7,10 +7,27 @@ public class Bullet : MonoBehaviour
     public int damage = 1;
     public GameObject impactEffect;
 
+    private Vector2 direction;
+    private bool isInitialized = false;
+
+    public void Initialize(Vector2 direction, float speed)
+    {
+        this.direction = direction;
+        this.speed = speed;
+        isInitialized = true;
+    }
+
     void Update()
     {
-        // Move forward
-        transform.Translate(Vector2.right * speed * Time.deltaTime);
+        if (!isInitialized)
+        {
+            // Default behavior if not properly initialized
+            transform.Translate(Vector2.right * speed * Time.deltaTime);
+            return;
+        }
+
+        // Move in the initialized direction
+        transform.Translate(direction * speed * Time.deltaTime);
     }
 
     void OnTriggerEnter2D(Collider2D collision)
