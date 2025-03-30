@@ -114,7 +114,7 @@ public class  Enemy : MonoBehaviour, IEnemy
     {
         if (isDead) return;
 
-        if (canSee(target) && !target.tag.Equals("Player"))// Removed incorrect player tag check
+        if (canSee(target) && target != null && target.CompareTag("Player"))
         {
             targetInSight = true;
         }

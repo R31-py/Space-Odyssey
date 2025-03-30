@@ -7,27 +7,44 @@ public class RobotutController : Enemy
     [SerializeField] private float attackCooldown = 1f;
     [SerializeField] private float wakeDelay = 0.3f;
     [SerializeField] private float stunDuration = 0.5f;
+    [SerializeField] private float turnDelay = 0.5f; // New turning delay variable
+    [SerializeField] private float attackDamageDelay = 0.4f; // Delay before damage is applied in attack animation
+    
     private float lastAttackTime;
     private bool isWakingUp;
+    private bool isAttacking = false;
+    private bool wasMoving = false;
+    private bool isTurning = false;
     private PlayerValues playerValues;
-    private float movingDirection = 1f;
+    private float lastDirectionChangeTime;
+    private int currentFacingDirection = 1; // 1 = right, -1 = left
 
+    // Animation state names based on your Animator
+    private const string STATE_SLEEP = "Sleep";
+    private const string STATE_WAKEUP = "WakeUp";
+    private const string STATE_IDLE = "Idle";
+    private const string STATE_WALK = "Walk";
+    private const string STATE_ATTACK = "Attack";
+    private const string STATE_DAMAGE = "Damage";
+    private const string STATE_DEATH = "Death";
+    private const string STATE_SHUTDOWN = "ShutDown";
 
-    
     protected override void Start()
     {
         base.Start();
         InitializeRobotut();
+        currentFacingDirection = Mathf.RoundToInt(transform.localScale.x);
     }
 
     private void InitializeRobotut()
     {
         target = GameObject.FindGameObjectWithTag("Player");
-        playerValues = target.GetComponent<PlayerValues>();
+        if(target != null) playerValues = target.GetComponent<PlayerValues>();
     
-        deathAnimationName = "Dead";
-        attackAnimationName = "Attack";
-        moveAnimationName = "canMove";
+        // Set these to match your actual animator state names
+        deathAnimationName = "Dead"; // Parameter name for triggering death
+        attackAnimationName = "Attack"; // Parameter name for triggering attack
+        moveAnimationName = "Walking"; // Parameter name for walk state
     }
 
     protected override void Update()
@@ -36,36 +53,131 @@ public class RobotutController : Enemy
     
         base.Update();
         UpdateDirection();
-    
-        // Add distance check
+
+        if (!targetInSight) return;
+
         float distanceToPlayer = Vector2.Distance(transform.position, target.transform.position);
         bool isInAttackRange = distanceToPlayer <= attackRange;
+        bool shouldMove = !isInAttackRange && canMove && !isAttacking && !isTurning;
 
-        // Handle attack when in range
-        if (CanAttack() && targetInSight && isInAttackRange) // Modified condition
+        // Only change animation state when the movement state CHANGES
+        if (shouldMove && !wasMoving)
         {
-            Attack();
+            animator.Play(STATE_WALK);
+            wasMoving = true;
+        }
+        else if (!shouldMove && wasMoving)
+        {
+            animator.Play(STATE_IDLE);
+            wasMoving = false;
         }
 
-        movingDirection = Mathf.Sign(target.transform.position.x - transform.position.x);
+        // Handle movement based on shouldMove flag
+        if (shouldMove)
+        {
+            float direction = Mathf.Sign(target.transform.position.x - transform.position.x);
+            Move(direction);
+        }
+        else
+        {
+            // Stop movement by setting velocity to zero
+            body.velocity = new Vector2(0, body.velocity.y);
+            
+            if (isInAttackRange && CanAttack() && !isTurning)
+            {
+                Attack();
+            }
+        }
     }
+
     private void UpdateDirection()
     {
-        if (targetInSight)
+        if (!targetInSight || target == null || isDead || isTurning) return;
+
+        float targetDirection = Mathf.Sign(target.transform.position.x - transform.position.x);
+        int newDirection = Mathf.RoundToInt(targetDirection);
+        
+        // Only change direction if it's different and enough time has passed
+        if (newDirection != currentFacingDirection && !isTurning && Time.time - lastDirectionChangeTime >= turnDelay)
         {
-            transform.localScale = new Vector3(- movingDirection, 1, 1);
+            StartCoroutine(TurnTowardsPlayer(newDirection));
         }
+    }
+
+    private IEnumerator TurnTowardsPlayer(int newDirection)
+    {
+        isTurning = true;
+        wasMoving = false;
+        
+        // Play idle animation during turning
+        animator.Play(STATE_IDLE);
+        
+        // Wait for turn delay
+        yield return new WaitForSeconds(turnDelay);
+        
+        // Update direction
+        transform.localScale = new Vector3(-newDirection, 1, 1);
+        currentFacingDirection = newDirection;
+        lastDirectionChangeTime = Time.time;
+        
+        isTurning = false;
     }
 
     public override void Attack()
     {
-        if (CanAttack())
+        if (CanAttack() && target != null && !isAttacking && !isTurning)
         {
-            base.Attack();
-            animator.SetTrigger("Attack");
-            playerValues.health -= 1;
+            isAttacking = true;
+            canMove = false; // Stop movement during attack
+            wasMoving = false; // Reset movement state
+            
+            // Play Attack animation directly
+            animator.Play(STATE_ATTACK);
+            
+            // Delay damage application until the right moment in the animation
+            StartCoroutine(DealDamageDuringAttack());
+            
             lastAttackTime = Time.time;
+            StartCoroutine(AttackSequence());
         }
+    }
+
+    private IEnumerator DealDamageDuringAttack()
+    {
+        // Wait until we reach the damage point in the animation
+        yield return new WaitForSeconds(attackDamageDelay);
+        
+        // Only deal damage if we're still in attack animation and facing the player
+        if (IsInAnimationState(STATE_ATTACK) && IsFacingPlayer())
+        {
+            float distanceToPlayer = Vector2.Distance(transform.position, target.transform.position);
+            if (distanceToPlayer <= attackRange && playerValues != null)
+            {
+                playerValues.health -= 1;
+            }
+        }
+    }
+
+    private bool IsFacingPlayer()
+    {
+        if (target == null) return false;
+        
+        float directionToPlayer = Mathf.Sign(target.transform.position.x - transform.position.x);
+        float facingDirection = -Mathf.Sign(transform.localScale.x);
+        
+        // Return true if the signs match (we're facing the player)
+        return Mathf.Approximately(directionToPlayer, facingDirection);
+    }
+
+    private IEnumerator AttackSequence()
+    {
+        // Wait for attack animation to finish
+        yield return new WaitForSeconds(attackCooldown);
+        isAttacking = false;
+        canMove = true; // Re-enable movement after cooldown
+        
+        // Return to Idle after attack
+        animator.Play(STATE_IDLE);
     }
 
     private bool CanAttack()
@@ -73,120 +185,128 @@ public class RobotutController : Enemy
         return Time.time - lastAttackTime >= attackCooldown;
     }
 
-    public override void Trigger()
-    {
-        if (!targetInSight && !isDead)
-        {
-            StartCoroutine(WakeUpSequence());
-        }
-    }
-
     private IEnumerator WakeUpSequence()
     {
         isWakingUp = true;
-        animator.SetBool("isWake", true);
+        animator.Play(STATE_WAKEUP);
         yield return new WaitForSeconds(wakeDelay);
         targetInSight = true;
         canMove = true;
-        animator.SetBool("canMove", true);
         isWakingUp = false;
+        wasMoving = false; // Reset movement state
+        animator.Play(STATE_IDLE);
     }
 
     public override void getHit(int damage)
     {
         if (isDead) return;
-    
-        base.getHit(damage);
-    
+
+        lifepoints -= damage;
+        
         if (lifepoints <= 0)
         {
-            Die();
+            HandleDeath();
         }
         else
         {
-            animator.SetTrigger("Damage");
+            // Reset movement state when taking damage
+            wasMoving = false;
+            isTurning = false;
+            
+            // Play damage animation
+            animator.Play(STATE_DAMAGE);
             StartCoroutine(HandleStun());
         }
     }
 
-// Modified die method
-    
+    private void HandleDeath()
+    {
+        isDead = true;
+        wasMoving = false; // Reset movement state
+        isTurning = false;
+        
+        // Play death animation
+        animator.Play(STATE_DEATH);
+        
+        GetComponent<Collider2D>().enabled = false;
+        canMove = false;
+        body.velocity = Vector2.zero;
+        Destroy(gameObject, 2f);
+    }
 
     private IEnumerator HandleStun()
     {
         canMove = false;
-        animator.SetBool("canMove", false);
+        body.velocity = Vector2.zero;
         yield return new WaitForSeconds(stunDuration);
+        
         if (!isDead) 
         {
             canMove = true;
-            animator.SetBool("canMove", true);
-        }
-    }
-
-    private void OnCollisionStay2D(Collision2D collision)
-    {
-        if (collision.gameObject.CompareTag("Player"))
-        {
-            Attack();
-        }
-        
-        // Original wall collision handling
-        if (collision.gameObject.CompareTag("Wall"))
-        {
-            movingDirection *= -1;
-            transform.localScale = new Vector3(movingDirection, 1, 1);
+            animator.Play(STATE_IDLE);
         }
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag("Player") && !targetInSight)
+        if (other.CompareTag("Player") && !targetInSight && !isWakingUp)
         {
-            animator.SetBool("isWake", true);
-            canMove = true;
-            targetInSight = true;
+            // Make sure we're checking the actual current state
+            if (IsInAnimationState(STATE_SLEEP))
+            {
+                StartCoroutine(WakeUpSequence());
+            }
         }
     }
 
     private void OnTriggerExit2D(Collider2D other)
     {
-        if (other.CompareTag("Player"))
+        if (other.CompareTag("Player") && targetInSight && !isDead)
         {
-            animator.SetTrigger("ShutDown");
-            animator.SetBool("isWake", false);
-            animator.SetBool("canMove", false);
-            canMove = false;
-            targetInSight = false;
+            StartCoroutine(ShutdownSequence());
         }
     }
 
-   public override void Move(float direction)
-{
-    if (canMove)
+    private IEnumerator ShutdownSequence()
     {
-        base.Move(direction);
-        body.velocity = new Vector2(movingDirection * moveSpeed, body.velocity.y);
+        // Reset movement state when shutting down
+        wasMoving = false;
+        isTurning = false;
+        
+        // Play shutdown animation
+        animator.Play(STATE_SHUTDOWN);
+        targetInSight = false;
+        canMove = false;
+        body.velocity = Vector2.zero;
+        
+        // Wait for shutdown animation to complete
+        yield return new WaitForSeconds(0.5f);
+        
+        // Return to sleep state
+        animator.Play(STATE_SLEEP);
     }
-}
 
-private new void Die() // Hides base Enemy.Die() if needed
-{
-    if (isDead) return;
-    
-    isDead = true;
-    animator.SetTrigger("Death");
-    Destroy(gameObject, 1f);
-    
-    // Disable all components
-    GetComponent<Collider2D>().enabled = false;
-    this.enabled = false;
-}
-void OnDrawGizmosSelected()
-{
-    Gizmos.color = Color.red;
-    Gizmos.DrawWireSphere(transform.position, attackRange);
-    Gizmos.color = Color.yellow;
-    Gizmos.DrawWireSphere(transform.position, triggerRange);
-}
+    // Check if currently in a specific animation state
+    private bool IsInAnimationState(string stateName)
+    {
+        return animator.GetCurrentAnimatorStateInfo(0).IsName(stateName);
+    }
+
+    // Override Move to properly handle animations
+    public override void Move(float direction)
+    {
+        if (canMove && !isAttacking && !isTurning)
+        {
+            // Call base Move only if we're allowed to move
+            base.Move(direction);
+        }
+    }
+
+    void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, attackRange);
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(transform.position, triggerRange);
+    }
 }
