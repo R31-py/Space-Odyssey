@@ -26,6 +26,8 @@ public class PlayerController : MonoBehaviour
     private float dashTimer;
     private float jumpHeight = 0;
     private bool secondJump = false;
+    private bool isAttacking = false;
+
     private void Awake()
     {
         body = GetComponent<Rigidbody2D>();
@@ -34,7 +36,6 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        Debug.Log("Is Grounded: " + isGrounded());
         bool isGroundedValue = isGrounded();
         transform.rotation = Quaternion.Euler(0, 0, 0);
 
@@ -42,21 +43,21 @@ public class PlayerController : MonoBehaviour
         if (horizontalInput != 0)
             direction = Mathf.Sign(horizontalInput);
 
-        if (playerValues.tutorialStage >= 0 && horizontalInput != 0)
+        if (playerValues.tutorialStage >= 0 && horizontalInput != 0 && !isAttacking)
         {
             transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x) * direction, transform.localScale.y, transform.localScale.z);
         }
 
-        if (wallJumpCD > 0.2f)
+        if (wallJumpCD > 0.2f && !isAttacking)
         {
             body.velocity = new Vector2(horizontalInput * movementSpeed, body.velocity.y);
 
             if (onWall() && !isGroundedValue)
             {
-                if (body.gravityScale != 2f) body.gravityScale = 2f;
+                body.gravityScale = 2f;
                 body.velocity = Vector2.zero;
             }
-            else if (body.gravityScale != 3)
+            else
             {
                 body.gravityScale = 3;
             }
@@ -86,18 +87,20 @@ public class PlayerController : MonoBehaviour
             wallJumpCD += Time.deltaTime;
         }
 
-        if (playerValues.tutorialStage >= 1)
+        if (playerValues.tutorialStage >= 1 && !isAttacking)
         {
             if (Input.GetKey(KeyCode.E) && body.velocity.x != 0 && dashCD > 0.7f)
             {
-                dashTimer = 0.15f;
+                dashTimer = .7f;
+                animator.SetTrigger("dashing");
             }
             else
             {
                 dashCD += Time.deltaTime;
             }
         }
-        if (dashTimer > 0)
+
+        if (dashTimer > 0 && !isAttacking)
         {
             dash();
             dashTimer -= Time.deltaTime;
@@ -112,44 +115,43 @@ public class PlayerController : MonoBehaviour
             jumpHeight = 0;
         }
 
-        if (Input.GetKeyDown(playerValues.FIGHT) )
+        if (Input.GetKeyDown(playerValues.FIGHT) && !isAttacking)
         {
-            animator.SetTrigger(new System.Random().Next(2) == 0 ? "attack" : "attack2");
+            StartCoroutine(Attack());
         }
         
-       
         Vector3 velocity = body.velocity;
-        velocity.x = Mathf.Clamp(velocity.x, -movementSpeed, movementSpeed);
-        velocity.z = Mathf.Clamp(velocity.z, -movementSpeed, movementSpeed);
         body.velocity = velocity;
 
-        animator.SetBool("move", horizontalInput != 0);
-        animator.SetBool("falling", !isGroundedValue);
+        animator.SetBool("move", horizontalInput != 0 && !isAttacking);
+        animator.SetBool("falling", !isGroundedValue && !isAttacking);
         body.angularVelocity = 0;
-        
-        
-        /*if (Input.GetKeyDown(KeyCode.Z) && playerValues.Inventory[0] != null)
-        {
-            switch (playerValues.Inventory[0].abilityID)
-            {
-                case 1:
-                    SlashAbility();
-                    break;
-                case 2:
-                    ShurikenAbility();
-                    break;
-            }   
-        }*/
-        
+
         if (Input.GetKeyDown(KeyCode.X))
         {
             ShurikenAbility();
         }
-        
+
         if (Input.GetKeyDown(KeyCode.Z))
         {
             SlashAbility();
         }
+    }
+
+    private IEnumerator Attack()
+    {
+        isAttacking = true;
+
+        // Choose a random attack animation
+        string attackAnim = UnityEngine.Random.Range(0, 2) == 0 ? "attack" : "attack2";
+        animator.CrossFade(attackAnim, 0.1f);
+
+        // Stop movement during attack
+        body.velocity = Vector2.zero;
+
+        yield return new WaitForSeconds(0.5f); // Adjust based on animation length
+
+        isAttacking = false;
     }
 
     private void jump()
@@ -183,18 +185,24 @@ public class PlayerController : MonoBehaviour
 
     private void slash()
     {
-        RaycastHit2D raycastHit = Physics2D.BoxCast(boxCollider2D.bounds.center, boxCollider2D.bounds.size, 0, Vector2.right * direction, 0.2f, enemyLayer);
+        RaycastHit2D raycastHit = Physics2D.BoxCast(
+            boxCollider2D.bounds.center,         
+            boxCollider2D.bounds.size * 3f,
+            0,                                   
+            Vector2.right * direction,
+            0.5f,
+            enemyLayer
+        );
         if (raycastHit.collider != null)
         {
             Enemy enemy = raycastHit.collider.GetComponent<Enemy>();
-            if (enemy) enemy.getHit(1) ;
-            
+            if (enemy) enemy.getHit(1);
         }
     }
 
     private void dash()
     {
-        body.velocity = new Vector2(movementSpeed * 4 * transform.localScale.x, body.velocity.y);
+        body.velocity = new Vector2(movementSpeed * 2 * transform.localScale.x, body.velocity.y);
         dashCD = 0;
     }
 
@@ -206,21 +214,19 @@ public class PlayerController : MonoBehaviour
 
     private bool onWall()
     {
-        return false;
         RaycastHit2D raycastHit = Physics2D.BoxCast(boxCollider2D.bounds.center, boxCollider2D.bounds.size, 0, new Vector2(transform.localScale.x, 0), 0.1f, wallLayer);
         return raycastHit.collider != null;
     }
-    
+
     public void SlashAbility()
     {
         animator.SetTrigger("attack");
         Instantiate(slash_pfb, transform.position + new Vector3(0, -0.7f, 0), Quaternion.identity);
-        Debug.Log("Slash Ability");
-    } 
-        
+    }
+
     public void ShurikenAbility()
     {
         Instantiate(shuriken_pfb, transform.position + new Vector3(0, -0.7f, 0), Quaternion.identity);
-        Debug.Log("Shuriken Ability");
     }
+    
 }
