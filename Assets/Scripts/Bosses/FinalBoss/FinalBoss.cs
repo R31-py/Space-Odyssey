@@ -24,25 +24,34 @@ public class FinalBoss : Enemy
     private Transform playerTransform;
     private bool isAttacking = false;
     private bool isBreathing = false;
-    private Vector2 currentFlyDirection;   // For random movement around the room
+    private Vector2 currentFlyDirection;
     private float directionChangeTimer = 0f;
     private float directionChangeInterval = 2f;
+    private Bounds flyBounds; // Movement boundary
 
     protected override void Start()
     {
         base.Start();
         
-        // Find player
         GameObject player = GameObject.FindGameObjectWithTag("Player");
         if (player != null)
             playerTransform = player.transform;
-
-        // Disable gravity for a flying boss
+        
         if (body != null)
         {
             body.gravityScale = 0f;
             body.constraints = RigidbodyConstraints2D.FreezeRotation;
         }
+        
+        CapsuleCollider2D boundary = GetComponent<CapsuleCollider2D>();
+        if (boundary != null)
+        {
+            flyBounds = boundary.bounds;
+            boundary.isTrigger = true;
+        }
+
+        // Set a random starting direction
+        currentFlyDirection = Random.insideUnitCircle.normalized;
 
         // Start in idle state
         animator.Play(idleState);
@@ -51,27 +60,23 @@ public class FinalBoss : Enemy
     protected override void Update()
     {
         base.Update();
-        if (isDead) return;
-        if (playerTransform == null) return;  // No player? No action.
+        if (isDead || playerTransform == null) return;
 
         // Check if player is within detection range
         float distanceToPlayer = Vector2.Distance(transform.position, playerTransform.position);
         bool playerDetected = distanceToPlayer <= detectionRange && !isAttacking && !isBreathing;
 
-        // Update animator param to go from idle → prep-attack or vice versa
+        // Update animator param
         animator.SetBool(DetectedParam, playerDetected);
 
-        // If we're not attacking or breathing, do random flying around
-        if (!isAttacking && !isBreathing)
+        if (playerDetected)
+        {
+            StartAttackCycle();
+        }
+        else
         {
             FlyAround();
         }
-    }
-    
-    public void TriggerAttack()
-    {
-        // We set the Attack trigger, which transitions from prep-attack → attack
-        animator.SetTrigger(AttackTrigger);
     }
     
     public void StartAttackCycle()
@@ -82,14 +87,9 @@ public class FinalBoss : Enemy
         }
     }
 
-    /// <summary>
-    /// Coroutine that shoots multiple arrows toward the player,
-    /// then takes a 3-second 'breath' in idle state.
-    /// </summary>
     private IEnumerator AttackRoutine()
     {
         isAttacking = true;
-        // Optionally, stop flying movement during the actual Attack
         body.velocity = Vector2.zero;
 
         for (int i = 0; i < arrowsPerAttack; i++)
@@ -98,15 +98,15 @@ public class FinalBoss : Enemy
             yield return new WaitForSeconds(shootInterval);
         }
 
-        // After finishing the arrows, go idle for breathTime
         isAttacking = false;
         isBreathing = true;
-        animator.SetBool(DetectedParam, false);  // Returns to idle
+        animator.SetBool(DetectedParam, false);
 
         yield return new WaitForSeconds(breathTime);
 
         isBreathing = false;
     }
+
     private void ShootArrowAtPlayer()
     {
         if (arrowPrefab == null || playerTransform == null) return;
@@ -114,12 +114,10 @@ public class FinalBoss : Enemy
         Vector3 spawnPos = transform.position;
         GameObject arrowObj = Instantiate(arrowPrefab, spawnPos, Quaternion.identity);
 
-        // Rotate arrow to face the player
         Vector2 direction = (playerTransform.position - spawnPos).normalized;
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
         arrowObj.transform.rotation = Quaternion.Euler(new Vector3(0, 0, angle));
 
-        // Give arrow a velocity
         Rigidbody2D arrowRb = arrowObj.GetComponent<Rigidbody2D>();
         if (arrowRb != null)
         {
@@ -130,17 +128,23 @@ public class FinalBoss : Enemy
     
     private void FlyAround()
     {
-        // Change direction every few seconds
         directionChangeTimer += Time.deltaTime;
         if (directionChangeTimer >= directionChangeInterval)
         {
             directionChangeTimer = 0f;
-            // Pick a random direction to fly
             currentFlyDirection = Random.insideUnitCircle.normalized;
         }
 
-        // Move boss
-        body.velocity = currentFlyDirection * flySpeed;
+        Vector2 nextPosition = (Vector2)transform.position + (currentFlyDirection * flySpeed * Time.deltaTime);
+
+        if (flyBounds.Contains(nextPosition))
+        {
+            transform.position = nextPosition;
+        }
+        else
+        {
+            currentFlyDirection = -currentFlyDirection;
+        }
     }
     
     public override void getHit(int damage)
@@ -152,8 +156,24 @@ public class FinalBoss : Enemy
         {
             isDead = true;
             body.velocity = Vector2.zero;
-            //animator.Play(\"finalboss-death\"); when boss dies
             Destroy(gameObject, 2f);
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            animator.SetBool(DetectedParam, true);
+            StartAttackCycle();
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            animator.SetBool(DetectedParam, false);
         }
     }
 }
