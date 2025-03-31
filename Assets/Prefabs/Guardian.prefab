@@ -15,13 +15,13 @@ GameObject:
   - component: {fileID: 4957456940793227908}
   - component: {fileID: 4957456940793227934}
   - component: {fileID: 4957456940793227935}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Guardian
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &4957456940793227928
 Transform:
   m_ObjectHideFlags: 0
@@ -156,7 +156,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 1
-  m_Constraints: 0
+  m_Constraints: 4
 --- !u!114 &4957456940793227934
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -169,25 +169,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e0a98e4c0d95d6a488d6ad307b5e1ec9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  target: {fileID: 0}
+  target: {fileID: 271694726270871207, guid: c873e68e8ac2fee408a47362749c6579, type: 3}
   moveSpeed: 1
   attackRange: 3
   triggerRange: 6
   lifepoints: 5
+  dropmoney: 20
   canMove: 0
   targetInSight: 0
   body: {fileID: 4957456940793227908}
   animator: {fileID: 4957456940793227930}
-  enemyLayer: []
+  enemyLayer:
+  - Enemy
   deathAnimationName: 
   attackAnimationName: attack
   moveAnimationName: move
+  deathParticles: {fileID: 7646690047917794015, guid: 34f3220f5099cb44d8019d2766eb5429, type: 3}
   enemyBoundry:
   - 100
   - 100
   startX: 0
   attackCooldown: 1.5
-  player: {fileID: 0}
+  player: {fileID: 6043811732653226290, guid: c873e68e8ac2fee408a47362749c6579, type: 3}
 --- !u!58 &4957456940793227935
 CircleCollider2D:
   m_ObjectHideFlags: 0

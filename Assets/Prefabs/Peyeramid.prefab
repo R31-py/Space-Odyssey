@@ -13,9 +13,9 @@ GameObject:
   - component: {fileID: 6028869001739873040}
   - component: {fileID: 6028869001739873055}
   - component: {fileID: 6028869001739873054}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Peyeramid
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -146,22 +146,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 99b5f46b3a7f1e34196e6d6f3ada2d33, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  target: {fileID: 0}
+  target: {fileID: 271694726270871207, guid: c873e68e8ac2fee408a47362749c6579, type: 3}
   moveSpeed: 0
   attackRange: 0
   triggerRange: 0
   lifepoints: 100
+  dropmoney: 1000
   canMove: 1
   targetInSight: 0
   body: {fileID: 6028869001739873040}
   animator: {fileID: 0}
-  enemyLayer: []
+  enemyLayer:
+  - Enemy
   deathAnimationName: 
   attackAnimationName: 
   moveAnimationName: 
+  deathParticles: {fileID: 7646690047917794015, guid: 34f3220f5099cb44d8019d2766eb5429, type: 3}
   enemyBoundry:
   - 100
   - 100
   startX: 0
   speed: 3
   height: 2
+  player: {fileID: 6043811732653226290, guid: c873e68e8ac2fee408a47362749c6579, type: 3}
