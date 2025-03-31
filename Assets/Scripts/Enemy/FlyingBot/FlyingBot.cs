@@ -254,7 +254,7 @@ public class FlyingBot : Enemy
         
         // Calculate direction and apply to local scale
         float direction = target.transform.position.x - transform.position.x;
-        if (Mathf.Abs(direction) > 0.1f) // Small threshold to prevent flickering
+        if (Mathf.Abs(direction) > 0.01f) // Small threshold to prevent flickering
         {
             float xScale = Mathf.Sign(direction);
             Vector3 oldScale = transform.localScale;
