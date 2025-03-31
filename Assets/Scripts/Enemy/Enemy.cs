@@ -93,6 +93,8 @@ public class  Enemy : MonoBehaviour, IEnemy
             }
         }
         return false;
+        // Add to your canSee method
+        Debug.DrawRay(transform.position, GetDirection(target.transform).normalized * triggerRange, Color.red, 0.1f);
     }
 
     public void OnTriggerEnter2D(Collider2D other)

@@ -12,7 +12,7 @@ public class Bullet : MonoBehaviour
 
     public void Initialize(Vector2 direction, float speed)
     {
-        this.direction = direction;
+        this.direction = -direction;
         this.speed = speed;
         isInitialized = true;
     }

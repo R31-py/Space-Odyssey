@@ -9,8 +9,11 @@ public class FlyingBot : Enemy
     public float maxDirectionAngle = 45f;
     
     [Header("Combat Settings")]
-    [SerializeField] private bool isShooting = false;
+    [SerializeField] public bool isShooting = false;
     public int playerAttackDamage = 1;
+    
+    [Header("Debug")]
+    [SerializeField] private bool showDebugLogs = true;
     
     // Property to determine which way the bot is facing
     public float FacingDirection => Mathf.Sign(transform.localScale.x);
@@ -32,6 +35,7 @@ public class FlyingBot : Enemy
             if (body == null)
             {
                 body = gameObject.AddComponent<Rigidbody2D>();
+                Debug.LogWarning("FlyingBot: Rigidbody2D was missing and had to be added automatically");
             }
         }
         
@@ -43,30 +47,156 @@ public class FlyingBot : Enemy
         // Set start position
         startPosition = transform.position;
         PickNewRandomDirection();
-        animator = null;
+        
+        // Check animator
+        if (GetComponent<Animator>() != null && animator == null)
+        {
+            animator = GetComponent<Animator>();
+            DebugLog("Found animator component but it wasn't assigned");
+        }
+        
+        // Find player if target is null
+        if (target == null)
+        {
+            target = GameObject.FindGameObjectWithTag("Player");
+            DebugLog("Looking for player: " + (target != null ? "Found" : "Not found"));
+        }
+        
+        // Add trigger collider if not exists
+        CircleCollider2D triggerCollider = GetComponent<CircleCollider2D>();
+        if (triggerCollider == null)
+        {
+            triggerCollider = gameObject.AddComponent<CircleCollider2D>();
+            triggerCollider.isTrigger = true;
+            triggerCollider.radius = triggerRange;
+            DebugLog("Added trigger collider for player detection");
+        }
+        else if (!triggerCollider.isTrigger)
+        {
+            // If there's already a CircleCollider2D but it's not a trigger, add a second one
+            CircleCollider2D newTrigger = gameObject.AddComponent<CircleCollider2D>();
+            newTrigger.isTrigger = true;
+            newTrigger.radius = triggerRange;
+            DebugLog("Added separate trigger collider for player detection");
+        }
+        
         initialized = true;
+        DebugLog("Initialization complete. Start position: " + startPosition);
     }
 
     protected override void Update()
     {
-        if (isDead || !initialized) return;
+        // Call base class Update which handles canSee() check
+        base.Update();
+        
+        if (isDead)
+        {
+            DebugLog("Bot is dead, skipping Update");
+            return;
+        }
+        
+        if (!initialized)
+        {
+            DebugLog("Bot is not initialized, skipping Update");
+            return;
+        }
+
+        // Check if target is null
+        if (target == null)
+        {
+            DebugLog("Target is null. Make sure 'Player' tag is set and target is properly assigned in Enemy class");
+            // Try to find player
+            GameObject player = GameObject.FindGameObjectWithTag("Player");
+            if (player != null)
+            {
+                target = player;
+                DebugLog("Found player and assigned as target");
+            }
+        }
 
         // Check if player is in sight
-        if (target != null && canSee(target))
+        if (target != null)
+        {
+            bool canSeeTarget = canSee(target);
+            DebugLog("Can see target: " + canSeeTarget);
+            
+            if (canSeeTarget)
+            {
+                targetInSight = true;
+                SetCombatState(true);
+            }
+        }
+    }
+
+    // Override canSee method to improve detection
+    public new bool canSee(GameObject target)
+    {
+        if (target == null) return false;
+        
+        Vector2 direction = (target.transform.position - transform.position).normalized;
+        float distance = Vector2.Distance(transform.position, target.transform.position);
+        
+        // Make sure distance is not greater than triggerRange
+        distance = Mathf.Min(distance, triggerRange);
+        
+        // Increase box size for better detection
+        RaycastHit2D hit = Physics2D.BoxCast(
+            transform.position,
+            new Vector2(1f, 1f), // Larger box
+            0f,
+            direction,
+            distance, // Use actual distance
+            ~LayerMask.GetMask(enemyLayer)
+        );
+        
+        // Debug visualization
+        Debug.DrawRay(transform.position, direction * distance, hit.collider != null ? Color.green : Color.red, 0.1f);
+        
+        if (hit.collider != null)
+        {
+            DebugLog("BoxCast hit: " + hit.collider.gameObject.name + " Tag: " + hit.collider.gameObject.tag);
+            return hit.collider.CompareTag("Player");
+        }
+        
+        return false;
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        DebugLog("Trigger entered: " + collision.gameObject.name + " Tag: " + collision.gameObject.tag);
+        
+        if (collision.CompareTag("Player"))
         {
             targetInSight = true;
             SetCombatState(true);
+            DebugLog("Player detected by trigger!");
         }
-        else
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Player"))
         {
             targetInSight = false;
             SetCombatState(false);
+            DebugLog("Player left trigger area");
         }
     }
 
     private void FixedUpdate()
     {
-        if (isDead || !initialized) return;
+        if (isDead || !initialized)
+        {
+            if (isDead) DebugLog("Bot is dead, skipping FixedUpdate");
+            if (!initialized) DebugLog("Bot is not initialized, skipping FixedUpdate");
+            return;
+        }
+        
+        // Check if body is frozen or has constraints that prevent movement
+        if (body.constraints != RigidbodyConstraints2D.None && body.constraints != RigidbodyConstraints2D.FreezeRotation)
+        {
+            DebugLog("WARNING: Rigidbody has constraints that may prevent movement: " + body.constraints);
+        }
         
         // Perform hovering movement
         RandomHover();
@@ -75,28 +205,47 @@ public class FlyingBot : Enemy
         if (isShooting && target != null)
         {
             FaceTarget();
+            DebugLog("Facing target. isShooting: " + isShooting);
         }
+        
+        // Debug current velocity
+        DebugLog("Current velocity: " + body.velocity + " Speed: " + body.velocity.magnitude);
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        DebugLog("Collision with: " + collision.gameObject.name + " Tag: " + collision.gameObject.tag);
+        
         if (collision.gameObject.CompareTag("Player"))
         {
             Animator playerAnimator = collision.gameObject.GetComponent<Animator>();
             if (playerAnimator != null)
             {
                 AnimatorStateInfo currentState = playerAnimator.GetCurrentAnimatorStateInfo(0);
+                DebugLog("Player animation state: " + currentState.fullPathHash + " IsAttack: " + 
+                    (currentState.IsName("attack") || currentState.IsName("attack2")));
+                
                 if (currentState.IsName("attack") || currentState.IsName("attack2"))
                 {
                     getHit(playerAttackDamage);
+                    DebugLog("Player hit bot with attack. Damage: " + playerAttackDamage);
                 }
+            }
+            else
+            {
+                DebugLog("Player has no Animator component");
             }
         }
     }
 
     public void SetCombatState(bool shouldShoot)
     {
+        bool stateChanged = isShooting != shouldShoot;
         isShooting = shouldShoot;
+        if (stateChanged)
+        {
+            DebugLog("Combat state changed to: " + (isShooting ? "Shooting" : "Not Shooting"));
+        }
     }
 
     private void FaceTarget()
@@ -108,7 +257,13 @@ public class FlyingBot : Enemy
         if (Mathf.Abs(direction) > 0.1f) // Small threshold to prevent flickering
         {
             float xScale = Mathf.Sign(direction);
+            Vector3 oldScale = transform.localScale;
             transform.localScale = new Vector3(xScale, 1, 1);
+            
+            if (oldScale.x != xScale)
+            {
+                DebugLog("Flipped direction to face: " + (xScale > 0 ? "right" : "left"));
+            }
         }
     }
 
@@ -119,48 +274,76 @@ public class FlyingBot : Enemy
         {
             PickNewRandomDirection();
             lastDirectionChangeTime = Time.time;
+            DebugLog("Changed hover direction to: " + randomDirection);
         }
 
         // Apply correction to stay within hover radius
         float distanceFromStart = Vector2.Distance(transform.position, startPosition);
+        DebugLog("Distance from start: " + distanceFromStart + " / " + hoverRadius);
+        
         if (distanceFromStart > hoverRadius)
         {
             // Calculate direction to return to center
             Vector2 returnDirection = (startPosition - (Vector2)transform.position).normalized;
             
+            // Old direction before adjustment
+            Vector2 oldDirection = randomDirection;
+            
             // Smoothly blend current direction with return direction
             randomDirection = Vector2.Lerp(randomDirection, returnDirection, 0.1f).normalized;
+            
+            DebugLog("Adjusting direction to stay in radius. Old: " + oldDirection + " New: " + randomDirection);
         }
 
         // Apply movement
+        Vector2 oldVelocity = body.velocity;
         body.velocity = randomDirection * idleSpeed;
+        
+        // Check if velocity changed
+        if ((oldVelocity - body.velocity).sqrMagnitude > 0.1f)
+        {
+            DebugLog("Applied velocity: " + body.velocity + " Speed: " + body.velocity.magnitude);
+        }
+        
+        // If velocity is zero but we're trying to move, something is wrong
+        if (body.velocity.sqrMagnitude < 0.1f && randomDirection.sqrMagnitude > 0.1f)
+        {
+            DebugLog("WARNING: Zero velocity despite movement command. Check rigidbody settings or collisions.");
+        }
     }
 
     private void PickNewRandomDirection()
     {
-        // Calculate direction toward center
-        Vector2 toCenter = (startPosition - (Vector2)transform.position).normalized;
-        
-        // Apply random angle variation
-        float randomAngle = Random.Range(-maxDirectionAngle, maxDirectionAngle);
-        randomDirection = Quaternion.Euler(0, 0, randomAngle) * toCenter;
-        randomDirection = randomDirection.normalized;
-    }
+        Vector2 toCenter = (startPosition - (Vector2)transform.position);
+    
+        // Handle case when already at center
+        if (toCenter.magnitude < 0.1f)
+        {
+            // Generate completely random direction when at center
+            randomDirection = Random.insideUnitCircle.normalized;
+        }
+        else
+        {
+            // Original logic with angle variation
+            float randomAngle = Random.Range(-maxDirectionAngle, maxDirectionAngle);
+            randomDirection = Quaternion.Euler(0, 0, randomAngle) * toCenter.normalized;
+        }
 
-    // Override base class methods that we don't need
-    public override void Move(float direction)
-    {
-        // Flying bots use RandomHover() instead of the standard Move method
+        DebugLog("New random direction: " + randomDirection);
     }
     
     public override void getHit(int amount)
     {
         if(isDead) return;
     
+        int oldLifepoints = lifepoints;
         lifepoints -= amount;
+        DebugLog("Bot hit! Damage: " + amount + " Old HP: " + oldLifepoints + " New HP: " + lifepoints);
+        
         if (lifepoints <= 0)
         {
             isDead = true;
+            DebugLog("Bot died!");
             
             // Optional: Add death effect here
             // Instantiate(deathEffect, transform.position, Quaternion.identity);
@@ -180,6 +363,25 @@ public class FlyingBot : Enemy
         else
         {
             Gizmos.DrawWireSphere(transform.position, hoverRadius);
+        }
+        
+        // Draw direction arrow
+        if (Application.isPlaying && initialized)
+        {
+            Gizmos.color = Color.yellow;
+            Gizmos.DrawLine(transform.position, (Vector2)transform.position + randomDirection * 2);
+        }
+        
+        // Draw detection radius
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, triggerRange);
+    }
+    
+    private void DebugLog(string message)
+    {
+        if (showDebugLogs)
+        {
+            Debug.Log("[FlyingBot " + gameObject.name + "]: " + message);
         }
     }
 }
