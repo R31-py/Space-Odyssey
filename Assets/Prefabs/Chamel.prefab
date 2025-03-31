@@ -15,9 +15,9 @@ GameObject:
   - component: {fileID: 5125108484088121701}
   - component: {fileID: 5125108484088121711}
   - component: {fileID: 5125108484088121710}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Chamel
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -169,21 +169,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f08d61e9d1cf144aaa34eb7110f110f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  target: {fileID: 0}
+  target: {fileID: 271694726270871207, guid: c873e68e8ac2fee408a47362749c6579, type: 3}
   moveSpeed: 1
   attackRange: 3
   triggerRange: 8
   lifepoints: 3
-  dropmoney: 0
+  dropmoney: 15
   canMove: 1
   targetInSight: 0
   body: {fileID: 5125108484088121701}
   animator: {fileID: 5125108484088121707}
-  enemyLayer: []
+  enemyLayer:
+  - Enemy
   deathAnimationName: 
   attackAnimationName: attack
   moveAnimationName: move
-  deathParticles: {fileID: 0}
+  deathParticles: {fileID: 7646690047917794015, guid: 34f3220f5099cb44d8019d2766eb5429, type: 3}
   enemyBoundry:
   - 100
   - 100
@@ -192,7 +193,7 @@ MonoBehaviour:
   attackCooldown: 1.5
   dashSpeed: 10
   dashDuration: 1
-  player: {fileID: 0}
+  player: {fileID: 6043811732653226290, guid: c873e68e8ac2fee408a47362749c6579, type: 3}
 --- !u!58 &5125108484088121710
 CircleCollider2D:
   m_ObjectHideFlags: 0
