@@ -9,7 +9,7 @@ public class RobotutController : Enemy
     [SerializeField] private float stunDuration = 0.5f;
     [SerializeField] private float turnDelay = 0.5f; // New turning delay variable
     [SerializeField] private float attackDamageDelay = 0.4f; // Delay before damage is applied in attack animation
-    
+    [SerializeField] private GameObject[] objectsToDestroyOnDeath;
     private float lastAttackTime;
     private bool isWakingUp;
     private bool isAttacking = false;
@@ -231,6 +231,14 @@ public class RobotutController : Enemy
         GetComponent<Collider2D>().enabled = false;
         canMove = false;
         body.velocity = Vector2.zero;
+
+        // Destroy all specified objects
+        foreach (GameObject obj in objectsToDestroyOnDeath)
+        {
+            if (obj != null)
+                Destroy(obj); // Destroy each object immediately
+        }
+
         Destroy(gameObject, 2f);
     }
 

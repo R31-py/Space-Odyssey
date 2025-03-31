@@ -283,5 +283,5 @@ public class PlayerController : MonoBehaviour
         activeShield = Instantiate(shield_pfb, transform.position + new Vector3(0, -0.4f, 0), Quaternion.identity, transform);
         activeShield.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
     }
-    
+ 
 }

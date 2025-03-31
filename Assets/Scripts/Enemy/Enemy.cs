@@ -3,9 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using Cinemachine; // Add this for Cinemachine functionality
 using Object = System.Object;
 
-public class  Enemy : MonoBehaviour, IEnemy
+public class Enemy : MonoBehaviour, IEnemy
 {
     public GameObject target;
     
@@ -24,7 +25,7 @@ public class  Enemy : MonoBehaviour, IEnemy
 
     public Rigidbody2D body;
     public Animator animator;
-    private PlayerValues player;
+    public PlayerValues player;
     
     public String[] enemyLayer;
     public String deathAnimationName;
@@ -33,13 +34,34 @@ public class  Enemy : MonoBehaviour, IEnemy
     [SerializeField] private ParticleSystem deathParticles;
     [SerializeField] private float[] enemyBoundry = { 100,100 };
     public float startX;
+    
+    // Add Cinemachine Impulse Source component reference
+    [SerializeField] private CinemachineImpulseSource impulseSource;
+    
+    // Camera shake parameters
+    [SerializeField] private float hitShakeIntensity = 0.5f;
+    [SerializeField] private float deathShakeIntensity = 1.0f;
 
     protected virtual void Start()
     {
-        startX=transform.position.x;
+        startX = transform.position.x;
         player = target.GetComponent<PlayerValues>();
+        
+        // Get or add the impulse source component
+        if (impulseSource == null)
+        {
+            impulseSource = GetComponent<CinemachineImpulseSource>();
+            if (impulseSource == null)
+            {
+                impulseSource = gameObject.AddComponent<CinemachineImpulseSource>();
+                // Set default impulse source settings
+                impulseSource.m_ImpulseDefinition.m_ImpulseDuration = 0.2f;
+                impulseSource.m_ImpulseDefinition.m_TimeEnvelope.m_DecayTime = 0.15f;
+                impulseSource.m_ImpulseDefinition.m_TimeEnvelope.m_SustainTime = 0.05f;
+                impulseSource.m_ImpulseDefinition.m_TimeEnvelope.m_AttackTime = 0.05f;
+            }
+        }
     }
-    
     
     public virtual void Attack()
     {
@@ -70,7 +92,6 @@ public class  Enemy : MonoBehaviour, IEnemy
         }
     }
 
-
     public virtual void Trigger()
     {
         Debug.Log("Trigger");
@@ -80,7 +101,25 @@ public class  Enemy : MonoBehaviour, IEnemy
     {
         return target.position - transform.position;
     }
-    
+    public void OnPlayerEnterDetection()
+    {
+        // Handle player entering detection (e.g., wake up)
+        if (!targetInSight)
+        {
+            targetInSight = true;
+            // Additional logic (e.g., wake animation)
+        }
+    }
+
+    public void OnPlayerExitDetection()
+    {
+        // Handle player exiting detection (e.g., shutdown)
+        if (targetInSight)
+        {
+            targetInSight = false;
+            // Additional logic (e.g., shutdown animation)
+        }
+    }
     public bool canSee(GameObject target)
     {
         int layerMask = ~LayerMask.GetMask(enemyLayer);
@@ -105,9 +144,23 @@ public class  Enemy : MonoBehaviour, IEnemy
 
     public virtual void getHit(int amount)
     {
-        if(isDead) return;
-        
-        lifepoints -= amount;
+        // Prevent invalid hits
+        if(isDead || amount <= 0) return;
+
+        // Calculate remaining lives BEFORE deduction
+        int remainingLives = lifepoints - amount;
+    
+        // Generate camera shake only when actually taking damage
+        if (impulseSource != null)
+        {
+            bool isFinalHit = remainingLives <= 0;
+            float intensity = isFinalHit ? deathShakeIntensity : hitShakeIntensity;
+            impulseSource.GenerateImpulseWithVelocity(intensity * UnityEngine.Random.insideUnitCircle);
+        }
+
+        // Apply damage
+        lifepoints = remainingLives;
+
         if (lifepoints <= 0)
         {
             isDead = true;
@@ -118,8 +171,7 @@ public class  Enemy : MonoBehaviour, IEnemy
             Destroy(gameObject, 3f);
         }
     }
-
-
+    
 
     protected virtual void Update()
     {
