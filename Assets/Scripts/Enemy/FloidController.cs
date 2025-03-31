@@ -25,8 +25,7 @@ public class FloidController : Enemy
     {
         if (canMove)
         {
-            body.velocity = new Vector2(-movingDirection * moveSpeed, body.velocity.y);
-            animator.SetTrigger(moveAnimationName);
+            Move(-movingDirection);
         }
         
         if (playerDetected)
