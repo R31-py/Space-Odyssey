@@ -25,7 +25,7 @@ public class Enemy : MonoBehaviour, IEnemy
 
     public Rigidbody2D body;
     public Animator animator;
-    public PlayerValues player;
+    private PlayerValues player;
     
     public String[] enemyLayer;
     public String deathAnimationName;
