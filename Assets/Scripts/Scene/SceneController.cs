@@ -5,7 +5,7 @@ using UnityEngine;
 public class SceneController : MonoBehaviour
 {
     private PlayerController player;
-    Vector3 startPosition;
+    public Vector3 startPosition;
     public float jumpHeight;
     
     void Start()
