@@ -14,6 +14,7 @@ public class NumberSortingGame : MonoBehaviour
     public Button checkOrderButton;
     public GameObject minigamePanel;
     public Image feedbackBackground;
+    public GameObject openGamePanel;
 
     [Header("Objects to Destroy")]
     public GameObject[] objectsToDestroy = new GameObject[4];
@@ -39,7 +40,7 @@ public class NumberSortingGame : MonoBehaviour
 
     void Update()
     {
-        if (playerInTrigger && Input.GetKeyDown(KeyCode.D) && !isMinigameActive && !isCompleted)
+        if (playerInTrigger && Input.GetKeyDown(KeyCode.F) && !isMinigameActive && !isCompleted)
         {
             InitializeGame();
             ActivateMinigame();
@@ -168,6 +169,7 @@ public class NumberSortingGame : MonoBehaviour
     {
         if (other.CompareTag("Player") && !isCompleted)
             playerInTrigger = true;
+            openGamePanel.SetActive(true);
     }
 
     void OnTriggerExit2D(Collider2D other)
@@ -176,6 +178,7 @@ public class NumberSortingGame : MonoBehaviour
         {
             playerInTrigger = false;
             if (isMinigameActive) DeactivateMinigame();
+            openGamePanel.SetActive(false);
         }
     }
 
