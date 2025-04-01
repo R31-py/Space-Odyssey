@@ -6,12 +6,14 @@ public class DoorTeleport : MonoBehaviour
 {
     public Transform teleportTarget; 
     private bool playerIsNear = false;
+    public GameObject openGamePanel;
 
     void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("Player")) 
         {
-            playerIsNear = true;
+            playerIsNear = true;    
+            openGamePanel.SetActive(true);
         }
     }
 
@@ -20,6 +22,7 @@ public class DoorTeleport : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             playerIsNear = false;
+            openGamePanel.SetActive(false);
         }
     }
 

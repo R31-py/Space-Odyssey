@@ -116,7 +116,7 @@ public class RobotutController : Enemy
         yield return new WaitForSeconds(turnDelay);
         
         // Update direction
-        transform.localScale = new Vector3(-newDirection, 1, 1);
+        transform.localScale = new Vector3(-(2*newDirection), 2, 2);
         currentFacingDirection = newDirection;
         lastDirectionChangeTime = Time.time;
         
