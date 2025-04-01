@@ -5,14 +5,13 @@ using UnityEngine;
 public class Parallax : MonoBehaviour
 {
     private float length, startPos;
-    private Transform cam;  
+    [SerializeField] private Transform cam;  
     [SerializeField] private float parallaxEffect;
 
     void Start()
     {
         startPos = transform.position.x;
         length = GetComponent<SpriteRenderer>().bounds.size.x;
-        cam = Camera.main.transform; 
     }
 
     void Update()
