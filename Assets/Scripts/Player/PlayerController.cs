@@ -5,8 +5,8 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    [SerializeField] private float movementSpeed = 10;
-    [SerializeField] private float maxJumpHeight = 0;
+    [SerializeField] public float movementSpeed = 10;
+    [SerializeField] public float maxJumpHeight = 0;
     [SerializeField] private LayerMask groundLayer;
     [SerializeField] private LayerMask enemyLayer;
     [SerializeField] private LayerMask wallLayer;
@@ -22,13 +22,12 @@ public class PlayerController : MonoBehaviour
     
     public Rigidbody2D body;
     private float horizontalInput;
-    private float gravity = 6f;
     private BoxCollider2D boxCollider2D;
     private float wallJumpCD;
     private float direction;
     private float dashCD;
     private float dashTimer;
-    private float jumpHeight = 0;
+    public float jumpHeight = 0;
     private bool secondJump = false;
     private bool isAttacking = false;
 
@@ -223,10 +222,10 @@ public class PlayerController : MonoBehaviour
         {
             float flipDirection = -Mathf.Sign(transform.localScale.x);
             transform.localScale = new Vector3(flipDirection * Mathf.Abs(transform.localScale.x), transform.localScale.y, transform.localScale.z);
-
             body.velocity = horizontalInput == 0
                 ? new Vector2(flipDirection * 10, 0)
                 : new Vector2(flipDirection * 3, 6);
+            StartCoroutine(slideOnWall());
 
             wallJumpCD = 0;
         }
@@ -282,6 +281,13 @@ public class PlayerController : MonoBehaviour
     {
         activeShield = Instantiate(shield_pfb, transform.position + new Vector3(0, -0.4f, 0), Quaternion.identity, transform);
         activeShield.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
+    }
+
+    private IEnumerator slideOnWall()
+    {
+        animator.Play("wallSlide");
+        
+        yield return new WaitForSeconds(1f);
     }
  
 }
