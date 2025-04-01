@@ -25,7 +25,7 @@ public class Enemy : MonoBehaviour, IEnemy
 
     public Rigidbody2D body;
     public Animator animator;
-    public PlayerValues player;
+    private PlayerValues player;
     
     public String[] enemyLayer;
     public String deathAnimationName;
@@ -149,15 +149,7 @@ public class Enemy : MonoBehaviour, IEnemy
 
         // Calculate remaining lives BEFORE deduction
         int remainingLives = lifepoints - amount;
-    
-        // Generate camera shake only when actually taking damage
-        if (impulseSource != null)
-        {
-            bool isFinalHit = remainingLives <= 0;
-            float intensity = isFinalHit ? deathShakeIntensity : hitShakeIntensity;
-            impulseSource.GenerateImpulseWithVelocity(intensity * UnityEngine.Random.insideUnitCircle);
-        }
-
+        
         // Apply damage
         lifepoints = remainingLives;
 

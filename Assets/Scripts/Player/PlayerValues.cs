@@ -76,17 +76,6 @@ public class PlayerValues : MonoBehaviour
             moneyText.text = money.ToString();
         }
     }
-    public void GetHit(int damage)
-    {
-        health -= damage;
-        if (health < 0)
-            health = 0;
-        
-        if (damageParticle != null)
-            damageParticle.Play();
-        
-        oldHealth = health;
-    }
 
      
 }
