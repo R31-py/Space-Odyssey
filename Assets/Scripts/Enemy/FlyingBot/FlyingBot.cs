@@ -11,6 +11,7 @@ public class FlyingBot : Enemy
     [Header("Combat Settings")]
     [SerializeField] public bool isShooting = false;
     public int playerAttackDamage = 1;
+    [SerializeField] private string[] playerAttackAnimationStates = {"attack", "attack2"}; // Animation states considered as attacks
     
     [Header("Debug")]
     [SerializeField] private bool showDebugLogs = true;
@@ -23,6 +24,8 @@ public class FlyingBot : Enemy
     private float lastDirectionChangeTime;
     private Vector2 startPosition;
     private bool initialized = false;
+    private CircleCollider2D triggerCollider; // Reference to trigger collider
+    private Collider2D physicalCollider; // Reference to physical collider
 
     protected override void Start()
     {
@@ -35,7 +38,7 @@ public class FlyingBot : Enemy
             if (body == null)
             {
                 body = gameObject.AddComponent<Rigidbody2D>();
-                Debug.LogWarning("FlyingBot: Rigidbody2D was missing and had to be added automatically");
+                DebugLog("FlyingBot: Rigidbody2D was missing and had to be added automatically");
             }
         }
         
@@ -62,8 +65,30 @@ public class FlyingBot : Enemy
             DebugLog("Looking for player: " + (target != null ? "Found" : "Not found"));
         }
         
+        // Get existing physical collider
+        Collider2D[] colliders = GetComponents<Collider2D>();
+        foreach (Collider2D col in colliders)
+        {
+            if (!col.isTrigger)
+            {
+                physicalCollider = col;
+                DebugLog("Found physical collider: " + col.GetType().Name);
+                break;
+            }
+        }
+        
+        // Add physical collider if none found
+        if (physicalCollider == null)
+        {
+            BoxCollider2D boxCollider = gameObject.AddComponent<BoxCollider2D>();
+            boxCollider.isTrigger = false;
+            boxCollider.size = new Vector2(1f, 1f); // Set appropriate size
+            physicalCollider = boxCollider;
+            DebugLog("Added physical body collider");
+        }
+        
         // Add trigger collider if not exists
-        CircleCollider2D triggerCollider = GetComponent<CircleCollider2D>();
+        triggerCollider = GetComponent<CircleCollider2D>();
         if (triggerCollider == null)
         {
             triggerCollider = gameObject.AddComponent<CircleCollider2D>();
@@ -77,6 +102,7 @@ public class FlyingBot : Enemy
             CircleCollider2D newTrigger = gameObject.AddComponent<CircleCollider2D>();
             newTrigger.isTrigger = true;
             newTrigger.radius = triggerRange;
+            triggerCollider = newTrigger;
             DebugLog("Added separate trigger collider for player detection");
         }
         
@@ -163,6 +189,7 @@ public class FlyingBot : Enemy
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        // Only handle detection logic in trigger, not damage
         DebugLog("Trigger entered: " + collision.gameObject.name + " Tag: " + collision.gameObject.tag);
         
         if (collision.CompareTag("Player"))
@@ -216,26 +243,77 @@ public class FlyingBot : Enemy
     {
         DebugLog("Collision with: " + collision.gameObject.name + " Tag: " + collision.gameObject.tag);
         
+        // Ignore projectiles completely
+        if (collision.gameObject.CompareTag("Projectile") || collision.gameObject.CompareTag("PlayerProjectile"))
+        {
+            DebugLog("Ignoring projectile collision");
+            return;
+        }
+        
+        // Only process player collisions
         if (collision.gameObject.CompareTag("Player"))
         {
-            Animator playerAnimator = collision.gameObject.GetComponent<Animator>();
-            if (playerAnimator != null)
+            HandlePlayerCollision(collision.gameObject);
+        }
+    }
+
+    private void HandlePlayerCollision(GameObject player)
+    {
+        Animator playerAnimator = player.GetComponent<Animator>();
+        if (playerAnimator != null)
+        {
+            AnimatorStateInfo currentState = playerAnimator.GetCurrentAnimatorStateInfo(0);
+            
+            // Check if player is in any attack animation state
+            bool isPlayerAttacking = false;
+            foreach (string attackState in playerAttackAnimationStates)
             {
-                AnimatorStateInfo currentState = playerAnimator.GetCurrentAnimatorStateInfo(0);
-                DebugLog("Player animation state: " + currentState.fullPathHash + " IsAttack: " + 
-                    (currentState.IsName("attack") || currentState.IsName("attack2")));
-                
-                if (currentState.IsName("attack") || currentState.IsName("attack2"))
+                if (currentState.IsName(attackState))
                 {
-                    getHit(playerAttackDamage);
-                    DebugLog("Player hit bot with attack. Damage: " + playerAttackDamage);
+                    isPlayerAttacking = true;
+                    break;
                 }
+            }
+            
+            DebugLog("Player animation state: " + currentState.fullPathHash + " IsAttack: " + isPlayerAttacking);
+            
+            if (isPlayerAttacking)
+            {
+                // Player is directly colliding and is in attack animation - apply damage
+                ApplyDamage(playerAttackDamage);
+                DebugLog("Player hit bot with melee attack. Damage: " + playerAttackDamage);
             }
             else
             {
-                DebugLog("Player has no Animator component");
+                DebugLog("Player collision with bot, but not in attack state. No damage taken.");
             }
         }
+        else
+        {
+            DebugLog("Player has no Animator component");
+        }
+    }
+
+    private void ApplyDamage(int amount)
+    {
+        if(isDead) return;
+    
+        int oldLifepoints = lifepoints;
+        lifepoints -= amount;
+        DebugLog("Bot hit! Damage: " + amount + " Old HP: " + oldLifepoints + " New HP: " + lifepoints);
+        
+        if (lifepoints <= 0)
+        {
+            isDead = true;
+            DebugLog("Bot died!");
+            Destroy(gameObject, 0.2f);
+        }
+    }
+
+    // Override to block all external damage sources
+    public override void getHit(int amount)
+    {
+        DebugLog("Blocked external damage call - only melee collisions can damage this bot");
     }
 
     public void SetCombatState(bool shouldShoot)
@@ -330,26 +408,6 @@ public class FlyingBot : Enemy
         }
 
         DebugLog("New random direction: " + randomDirection);
-    }
-    
-    public override void getHit(int amount)
-    {
-        if(isDead) return;
-    
-        int oldLifepoints = lifepoints;
-        lifepoints -= amount;
-        DebugLog("Bot hit! Damage: " + amount + " Old HP: " + oldLifepoints + " New HP: " + lifepoints);
-        
-        if (lifepoints <= 0)
-        {
-            isDead = true;
-            DebugLog("Bot died!");
-            
-            // Optional: Add death effect here
-            // Instantiate(deathEffect, transform.position, Quaternion.identity);
-            
-            Destroy(gameObject, 0.2f);
-        }
     }
 
     private void OnDrawGizmosSelected()
