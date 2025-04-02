@@ -324,3 +324,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sfxLibrary: {fileID: 2845180618770828960}
   sfx2DSource: {fileID: 2845180618433880463}
+  musicSource: {fileID: 0}
+  defaultBackgroundMusic: {fileID: 8300000, guid: 4115c56f5b963754eb1cc4e4932d287b, type: 3}
+  bossFightMusic: {fileID: 8300000, guid: cf1c6632e2360c2439d9dddca3cca6bc, type: 3}
