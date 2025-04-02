@@ -11,20 +11,24 @@ public class Parallax : MonoBehaviour
     void Start()
     {
         startPos = transform.position.x;
-        length = GetComponent<SpriteRenderer>().bounds.size.x;
+        SpriteRenderer renderer = GetComponentInChildren<SpriteRenderer>();
+        if (renderer != null)
+            length = renderer.bounds.size.x;
+        else
+            Debug.LogError("No SpriteRenderer found in this object or its children");
     }
 
     void Update()
     {
-        float temp = cam.position.x * (1 - parallaxEffect);
         float dist = cam.position.x * parallaxEffect;
+        float newPos = startPos + dist;
+    
+        transform.position = new Vector3(newPos, transform.position.y, transform.position.z);
 
-        transform.position = new Vector3(startPos + dist, transform.position.y, transform.position.z);
-
-        // Smooth Looping Fix
-        if (temp > startPos + length) 
+        // Better looping check
+        if (cam.position.x - transform.position.x > length)
             startPos += length;
-        else if (temp < startPos - length) 
+        else if (cam.position.x - transform.position.x < -length)
             startPos -= length;
     }
 }
