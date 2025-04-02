@@ -5,6 +5,7 @@ public class CameraSwitch : MonoBehaviour
 {
     public CinemachineVirtualCamera camLeft; // Assign Left Area's camera
     public CinemachineVirtualCamera camRight; // Assign Right Area's camera
+    public bool startWithRightCamera = false; // Set this in the inspector for right side areas
     private CinemachineVirtualCamera _currentCam;
     
     // Store player entry position
@@ -12,11 +13,19 @@ public class CameraSwitch : MonoBehaviour
 
     void Start()
     {
-        // Initialize with camLeft
-        _currentCam = camLeft;
-        camLeft.enabled = true;
-        camRight.enabled = false;
-        Debug.Log("Camera system initialized with left camera active");
+        // Initialize with appropriate camera based on area
+        if (startWithRightCamera)
+        {
+            _currentCam = camRight;
+            camRight.enabled = true;
+            camLeft.enabled = false;
+        }
+        else
+        {
+            _currentCam = camLeft;
+            camLeft.enabled = true;
+            camRight.enabled = false;
+        }
     }
 
     void OnTriggerEnter2D(Collider2D other)
@@ -25,7 +34,6 @@ public class CameraSwitch : MonoBehaviour
         {
             // Store where the player entered the trigger
             playerEntryPosition = other.transform.position;
-            Debug.Log($"Player entered trigger at position: X={playerEntryPosition.x:F2}, Y={playerEntryPosition.y:F2}");
         }
     }
 
@@ -39,11 +47,6 @@ public class CameraSwitch : MonoBehaviour
             // Calculate true movement direction based on entry and exit positions
             Vector2 movementDirection = playerExitPosition - playerEntryPosition;
             
-            // Debug logs
-            Debug.Log($"Player entered at: X={playerEntryPosition.x:F2}, Y={playerEntryPosition.y:F2}");
-            Debug.Log($"Player exited at: X={playerExitPosition.x:F2}, Y={playerExitPosition.y:F2}");
-            Debug.Log($"Movement vector: X={movementDirection.x:F2}, Y={movementDirection.y:F2}");
-            
             // Determine if horizontal movement is the dominant direction
             bool horizontalMovement = Mathf.Abs(movementDirection.x) > Mathf.Abs(movementDirection.y);
             
@@ -52,28 +55,20 @@ public class CameraSwitch : MonoBehaviour
             {
                 if (movementDirection.x > 0) // Moving right
                 {
-                    Debug.Log("Player moving RIGHT - Switching to right camera");
                     SwitchCamera(camRight);
                 }
                 else // Moving left
                 {
-                    Debug.Log("Player moving LEFT - Switching to left camera");
                     SwitchCamera(camLeft);
                 }
-            }
-            else
-            {
-                Debug.Log("Vertical movement detected, keeping current camera");
             }
         }
     }
 
     private void SwitchCamera(CinemachineVirtualCamera newCam)
     {
-        Debug.Log($"Switching from {_currentCam.name} to {newCam.name}");
         _currentCam.enabled = false;
         newCam.enabled = true;
         _currentCam = newCam;
-        Debug.Log("Camera switch complete");
     }
 }
