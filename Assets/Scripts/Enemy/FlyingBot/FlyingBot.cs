@@ -16,6 +16,10 @@ public class FlyingBot : Enemy
     [Header("Debug")]
     [SerializeField] private bool showDebugLogs = true;
     
+    [Header("Death Effects")]
+    [SerializeField] private GameObject explosionPrefab;
+    [SerializeField] private float explosionDuration = 0.5f;
+    
     // Property to determine which way the bot is facing
     public float FacingDirection => Mathf.Sign(transform.localScale.x);
     
@@ -143,7 +147,7 @@ public class FlyingBot : Enemy
         // Check if player is in sight
         if (target != null)
         {
-            bool canSeeTarget = canSee(target);
+            bool canSeeTarget = CanSee(target);
             DebugLog("Can see target: " + canSeeTarget);
             
             if (canSeeTarget)
@@ -154,8 +158,8 @@ public class FlyingBot : Enemy
         }
     }
 
-    // Override canSee method to improve detection
-    public new bool canSee(GameObject target)
+    // Override CanSee method to improve detection
+    protected new bool CanSee(GameObject target)
     {
         if (target == null) return false;
         
@@ -291,6 +295,8 @@ public class FlyingBot : Enemy
         else
         {
             DebugLog("Player has no Animator component");
+            // Explicit handling of null animator case - can be customized based on design requirements
+            // For example, default to no damage if there's no animator to check attack state
         }
     }
 
@@ -306,7 +312,23 @@ public class FlyingBot : Enemy
         {
             isDead = true;
             DebugLog("Bot died!");
-            Destroy(gameObject, 0.2f);
+            
+            // Spawn explosion effect
+            if(explosionPrefab != null)
+            {
+                GameObject explosion = Instantiate(
+                    explosionPrefab, 
+                    transform.position, 
+                    Quaternion.identity
+                );
+                Destroy(explosion, explosionDuration);
+            }
+            else
+            {
+                Debug.LogWarning("No explosion prefab assigned to FlyingBot");
+            }
+            
+            Destroy(gameObject, 0.1f); // Small delay before destroying bot
         }
     }
 
@@ -326,7 +348,7 @@ public class FlyingBot : Enemy
         }
     }
 
-    private void FaceTarget()
+    public void FaceTarget()
     {
         if (target == null) return;
         
