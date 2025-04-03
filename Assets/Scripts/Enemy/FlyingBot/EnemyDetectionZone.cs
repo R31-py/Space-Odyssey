@@ -14,6 +14,7 @@ public class EnemyDetectionZone : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             enemy.OnPlayerEnterDetection();
+            
         }
     }
 
