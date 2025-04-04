@@ -50,6 +50,7 @@ public class LevelTransition : MonoBehaviour
     private void TransitionToNextLevel()
     {
         // Optionally, you can add any transition effects here (fade out, sound, etc.)
+        PlayerSaveManager.SaveLoadState.loadingFromSave = false;
         SceneManager.LoadScene(sceneToLoad);
     }
 }

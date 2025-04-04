@@ -44,31 +44,27 @@ public class PlayerValues : MonoBehaviour
     void Start()
     {
         oldHealth = health;
+        Dictionary<string, object> savedData = PlayerSaveManager.LoadPlayerData();
+        ApplyLoadedData(savedData);
     }
 
-    // Update is called once per frame
     void Update()
     {
         UpdateMoneyUI();
-        
+
         if (oldHealth > health)
         {
-            Debug.Log("Play damageParticle"); 
-            //damageParticle.Play();
-//            SoundManager.Instance.PlaySound2D("player_Hurt");
             oldHealth = health;
         }
-        else
-        {
-            // damageParticle.Stop();
-        }
+
         if (health <= 0)
         {
-            player.SetActive(false);    
+            Debug.Log("Player Died! Reloading Save...");
+            StartCoroutine(ReloadLastSave());
+            money = 0;
         }
-        
     }
-    
+
     private void UpdateMoneyUI()
     {
         if (moneyText != null)
@@ -77,5 +73,17 @@ public class PlayerValues : MonoBehaviour
         }
     }
 
-     
+    private IEnumerator ReloadLastSave()
+    {
+        yield return new WaitForSeconds(2); // Optional delay before reload
+        Dictionary<string, object> savedData = PlayerSaveManager.LoadPlayerData();
+        ApplyLoadedData(savedData);
+    }
+
+    public void ApplyLoadedData(Dictionary<string, object> data)
+    {
+        health = (int)data["Health"];
+        money = (int)data["Money"];
+        player.transform.position = (Vector3)data["Position"];
+    }
 }

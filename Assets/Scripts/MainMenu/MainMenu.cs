@@ -13,9 +13,12 @@ public class MainMenu : MonoBehaviour
     public Slider sfxSlider;
     
     public void StartGame()
-    {
+    { 
+        PlayerSaveManager.SaveLoadState.loadingFromSave = true;
         LoadVolume();
-        SceneManager.LoadScene(1);
+        string lastScene = PlayerPrefs.GetString("LastScene", "Level1");
+    
+        SceneManager.LoadScene(lastScene);
     }
 
     public void QuitGame()

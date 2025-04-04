@@ -92,7 +92,7 @@ public class PlayerController : MonoBehaviour
 
         if (playerValues.tutorialStage >= 1 && !isAttacking)
         {
-            if (Input.GetKey(KeyCode.E) && body.velocity.x != 0 && dashCD > 0.7f)
+            if (Input.GetKey(KeyCode.E) && body.velocity.x != 0 && dashCD > 2f)
             {
                 dashTimer = .2f;
                 animator.SetTrigger("dashing");
