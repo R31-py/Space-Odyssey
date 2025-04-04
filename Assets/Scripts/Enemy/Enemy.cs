@@ -25,7 +25,7 @@ public class Enemy : MonoBehaviour, IEnemy
 
     public Rigidbody2D body;
     public Animator animator;
-    private PlayerValues player;
+    public PlayerValues player;
     
     public String[] enemyLayer;
     public String deathAnimationName;
@@ -44,9 +44,23 @@ public class Enemy : MonoBehaviour, IEnemy
 
     protected virtual void Start()
     {
+        if (target == null)
+        {
+            SceneController sceneController = FindObjectOfType<SceneController>();
+            if (sceneController != null)
+            {
+                target = sceneController.player.gameObject;
+            }
+            else
+            {
+                Debug.LogError("SceneController or Player not found!");
+            }
+        }
+
         startX = transform.position.x;
-        player = target.GetComponent<PlayerValues>();
-        
+            player = target.GetComponent<PlayerValues>();
+            
+
         // Get or add the impulse source component
         if (impulseSource == null)
         {

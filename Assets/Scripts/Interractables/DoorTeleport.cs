@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class DoorTeleport : MonoBehaviour
 {
@@ -34,6 +35,7 @@ public class DoorTeleport : MonoBehaviour
             if (player != null && teleportTarget != null)
             {
                 player.transform.position = teleportTarget.position; // Teleport the player
+                player.GetComponent<PlayerSaveManager>().SavePlayerData(SceneManager.GetActiveScene().name);
             }
         }
     }

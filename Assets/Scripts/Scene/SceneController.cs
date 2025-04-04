@@ -10,6 +10,7 @@ public class SceneController : MonoBehaviour
     public float jumpHeight;
     public TextMeshProUGUI moneyText;
     private bool setUp = false;
+    public GameObject boss;
 
     void Start()
     {
@@ -61,7 +62,7 @@ public class SceneController : MonoBehaviour
         saveManager.SavePlayerData(SceneManager.GetActiveScene().name);
 
         if (rb != null) rb.simulated = true;
-
+        if(saveManager.IsBossDefeated("Robotut")) Destroy(boss);
         setUp = true;
     }
 }

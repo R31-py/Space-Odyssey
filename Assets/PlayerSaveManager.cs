@@ -76,7 +76,7 @@ public class PlayerSaveManager : MonoBehaviour
 
         // Load Bosses Defeated
         Dictionary<string, bool> loadedBosses = new Dictionary<string, bool>();
-        foreach (string bossName in new string[] { "Boss1", "Boss2", "Boss3" })
+        foreach (string bossName in new string[] { "Robotut", "Boss2", "Boss3" })
         {
             loadedBosses[bossName] = PlayerPrefs.GetInt("Boss_" + bossName, 0) == 1;
         }

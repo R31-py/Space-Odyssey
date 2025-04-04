@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class RobotutController : Enemy
 {
@@ -240,6 +241,8 @@ public class RobotutController : Enemy
         }
 
         Destroy(gameObject, 2f);
+        player.GetComponent<PlayerSaveManager>().SavePlayerData(SceneManager.GetActiveScene().name);
+        player.GetComponent<PlayerSaveManager>().SetBossDefeated("Robotut");
     }
 
     private IEnumerator HandleStun()
