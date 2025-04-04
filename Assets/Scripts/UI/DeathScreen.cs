@@ -6,8 +6,10 @@ using UnityEngine.SceneManagement;
 
 public class DeathScreen : MonoBehaviour
 {
+    [SerializeField] public GameObject deathScreen;
     private void Start()
     {
+        deathScreen.SetActive(true);
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
     }
