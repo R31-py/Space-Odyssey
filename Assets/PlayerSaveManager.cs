@@ -95,9 +95,4 @@ public class PlayerSaveManager : MonoBehaviour
     {
         return bossesDefeated.ContainsKey(bossName) && bossesDefeated[bossName];
     }
-
-    private void OnApplicationQuit()
-    {
-        SavePlayerData(SceneManager.GetActiveScene().name);
-    }
 }
