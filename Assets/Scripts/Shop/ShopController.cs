@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class ShopController : MonoBehaviour
@@ -11,12 +12,23 @@ public class ShopController : MonoBehaviour
     public InventoryController inventoryController;
     private PlayerValues playerValues;
     public TextMeshProUGUI moneyText;
-    
+    private SceneController sceneController;
+
     private void Start()
     {
+        sceneController = FindObjectOfType<SceneController>();
+        if (player == null)
+        {
+            if (sceneController != null)
+            {
+                player = sceneController.player.gameObject;
+            }
+        }
         playerValues = player.GetComponent<PlayerValues>();
         inventoryController = inventoryController.GetComponent<InventoryController>();
     }
+
+    
 
     private void Update()
     {
@@ -70,5 +82,4 @@ public class ShopController : MonoBehaviour
         moneyText.text = playerValues.money.ToString();
     }
     
-
 }
