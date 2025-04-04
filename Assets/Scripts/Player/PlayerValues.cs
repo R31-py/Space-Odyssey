@@ -13,6 +13,9 @@ public class PlayerValues : MonoBehaviour
     [SerializeField] public int maxHealth;
     
     [SerializeField] public GameObject player;
+    [SerializeField] private GameObject deathScreen;
+    private bool isDead = false;
+    private Animator animator;
     public ParticleSystem damageParticle;
     
     public int money = 100;
@@ -44,6 +47,7 @@ public class PlayerValues : MonoBehaviour
     void Start()
     {
         oldHealth = health;
+        animator = player.GetComponent<Animator>();
         Dictionary<string, object> savedData = PlayerSaveManager.LoadPlayerData();
         ApplyLoadedData(savedData);
     }
@@ -57,8 +61,11 @@ public class PlayerValues : MonoBehaviour
             oldHealth = health;
         }
 
-        if (health <= 0)
+        if (health <= 0 && !isDead)
         {
+            isDead = true;
+            animator.Play("death");
+            deathScreen.SetActive(true);
             Debug.Log("Player Died! Reloading Save...");
             StartCoroutine(ReloadLastSave());
             money = 0;
