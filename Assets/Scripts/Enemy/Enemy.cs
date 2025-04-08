@@ -174,7 +174,7 @@ public class Enemy : MonoBehaviour, IEnemy
             particlesInstance.Play();
             animator.SetTrigger(deathAnimationName);
             player.money += dropmoney;
-            Destroy(gameObject, 3f);
+            Destroy(gameObject, 1f);
         }
     }
     

@@ -49,23 +49,16 @@ public class SH_Controller : Enemy
     public override void Attack()
     {
         if (playerTransform == null) return;
-        // Richtung zum Spieler berechnen
-        /*Vector2 attackDirection = (playerTransform.position - transform.position).normalized;
-
-        // Projektil erzeugen
-        GameObject dagger = Instantiate(SHs_Dagger, transform.position, Quaternion.identity);
-        Rigidbody2D daggerRb = dagger.GetComponent<Rigidbody2D>();
-        daggerRb.velocity = attackDirection * 10f;*/ // Geschwindigkeit anpassen
 
         Debug.Log($"{gameObject.name} attacked!");
-        isAttacking = true; // Prevent multiple attacks at once
+        isAttacking = true; 
         animator.SetTrigger(attackAnimationName);
     }
 
-    // Animation event for dagger spawn
+    // Animation event 
     public void SpawnDagger()
     {
-        if (playerDetected) // Only spawn dagger if player is still in range
+        if (playerDetected) 
         {
             Instantiate(SHs_Dagger, transform.position, Quaternion.identity);
         }
@@ -74,7 +67,7 @@ public class SH_Controller : Enemy
             Debug.Log($"{gameObject.name} tried to attack, but the player is gone.");
         }
 
-        isAttacking = false; // Allow next attack
+        isAttacking = false; 
     }
     
     public override void Trigger()
