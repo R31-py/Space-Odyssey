@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 public class CameraController : MonoBehaviour
 {
 
-    [SerializeField] private Transform player;
+    public Transform player;
     [SerializeField] private float tolerance;
     [SerializeField] private float cameraSpeed;
     private float lookAhead;

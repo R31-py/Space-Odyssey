@@ -11,6 +11,8 @@ public class SceneController : MonoBehaviour
     public TextMeshProUGUI moneyText;
     private bool setUp = false;
     public GameObject boss;
+    public DeathScreen deathScreen;
+    public CameraController cameraController;
 
     void Start()
     {
@@ -22,6 +24,8 @@ public class SceneController : MonoBehaviour
         yield return null;
 
         player = FindObjectOfType<PlayerController>();
+        
+        
 
         if (player == null)
         {
@@ -31,6 +35,8 @@ public class SceneController : MonoBehaviour
 
         PlayerValues playerValues = player.GetComponent<PlayerValues>();
         PlayerSaveManager saveManager = player.GetComponent<PlayerSaveManager>();
+        deathScreen.playerValues = playerValues;
+        cameraController.player = player.gameObject.transform;
 
         if (playerValues == null || saveManager == null)
         {

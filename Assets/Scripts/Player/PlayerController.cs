@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -36,10 +37,12 @@ public class PlayerController : MonoBehaviour
         body = GetComponent<Rigidbody2D>();
         boxCollider2D = GetComponent<BoxCollider2D>();
     }
-
+    
     private void Update()
     {
-        bool isGroundedValue = isGrounded();
+        if (!PlayerValues.isDead)
+        { 
+            bool isGroundedValue = isGrounded();
         transform.rotation = Quaternion.Euler(0, 0, 0);
 
         horizontalInput = Input.GetAxis("Horizontal");
@@ -182,6 +185,8 @@ public class PlayerController : MonoBehaviour
             }
             
             inventoryController.Remove(2);
+        }
+        
         }
         
     }

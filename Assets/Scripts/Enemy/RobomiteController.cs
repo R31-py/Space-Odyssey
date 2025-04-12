@@ -7,7 +7,7 @@ public class RobomiteController : Enemy
 {
     [SerializeField] private float waitTime = 0.3f;
     [SerializeField] private float hitCooldown = 1f;
-    [SerializeField] public PlayerValues player;
+    private PlayerValues player;
     private float currentHitCooldown = 0f;
     private int movingDirection = 1;
     private bool playerDetected = false;
@@ -16,6 +16,7 @@ public class RobomiteController : Enemy
     {
         body = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
+        player = target.GetComponent<PlayerValues>();
     }
 
     private void Update()

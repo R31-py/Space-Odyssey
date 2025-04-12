@@ -14,9 +14,10 @@ public class PlayerValues : MonoBehaviour
     
     [SerializeField] public GameObject player;
     [SerializeField] private GameObject deathScreen;
-    private bool isDead = false;
+    public static bool isDead = false;
     private Animator animator;
     public ParticleSystem damageParticle;
+    public ParticleSystem deathParticle;
     
     public int money = 100;
     public TextMeshProUGUI moneyText; // Assign this in Unity Inspector
@@ -58,17 +59,24 @@ public class PlayerValues : MonoBehaviour
 
         if (oldHealth > health)
         {
+            damageParticle.Play();
+            Debug.Log(damageParticle);
             oldHealth = health;
         }
 
         if (health <= 0 && !isDead)
         {
             isDead = true;
+            ParticleSystem particlesInstance = Instantiate(deathParticle, transform.position, Quaternion.identity);
+            particlesInstance.Play();
             animator.Play("death");
             deathScreen.SetActive(true);
-            Debug.Log("Player Died! Reloading Save...");
-            StartCoroutine(ReloadLastSave());
             money = 0;
+        }
+
+        if (!isDead)
+        {
+            deathScreen.SetActive(false);
         }
     }
 
@@ -80,16 +88,17 @@ public class PlayerValues : MonoBehaviour
         }
     }
 
-    private IEnumerator ReloadLastSave()
+    public IEnumerator ReloadLastSave()
     {
-        yield return new WaitForSeconds(2); // Optional delay before reload
+        yield return new WaitForSeconds(0.5f); // Optional delay before reload
         Dictionary<string, object> savedData = PlayerSaveManager.LoadPlayerData();
         ApplyLoadedData(savedData);
+        PlayerValues.isDead = false;
     }
 
     public void ApplyLoadedData(Dictionary<string, object> data)
     {
-        health = (int)data["Health"];
+        health = 3;
         money = (int)data["Money"];
         player.transform.position = (Vector3)data["Position"];
     }

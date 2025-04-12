@@ -158,15 +158,8 @@ public class Enemy : MonoBehaviour, IEnemy
 
     public virtual void getHit(int amount)
     {
-        // Prevent invalid hits
-        if(isDead || amount <= 0) return;
-
-        // Calculate remaining lives BEFORE deduction
-        int remainingLives = lifepoints - amount;
+        lifepoints -= amount;
         
-        // Apply damage
-        lifepoints = remainingLives;
-
         if (lifepoints <= 0)
         {
             isDead = true;

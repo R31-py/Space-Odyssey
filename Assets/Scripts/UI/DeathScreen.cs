@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 
 public class DeathScreen : MonoBehaviour
 {
+    public PlayerValues playerValues;
     private void Start()
     {
         Cursor.visible = true;
@@ -14,7 +15,7 @@ public class DeathScreen : MonoBehaviour
 
     public void RestartGame()
     {
-        SceneManager.LoadScene("Level1");
+        StartCoroutine(playerValues.ReloadLastSave());
     }
     
     public void ReturnToMainMenu()
