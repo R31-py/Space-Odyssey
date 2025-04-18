@@ -82,6 +82,11 @@ public class PlayerController : MonoBehaviour
                     jump();
                 }
 
+                if (Input.GetKeyDown(playerValues.JUMP))
+                {
+                    SoundManager.Instance.PlaySound2D("player_jump");
+                }
+
                 if (Input.GetKeyUp(playerValues.JUMP) && !isGroundedValue)
                 {
                     jumpHeight = maxJumpHeight + 1;
@@ -124,6 +129,7 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKeyDown(playerValues.FIGHT) && !isAttacking)
         {
             StartCoroutine(Attack());
+            SoundManager.Instance.PlaySound2D("player_attack");
         }
         
         Vector3 velocity = body.velocity;
@@ -274,16 +280,19 @@ public class PlayerController : MonoBehaviour
     public void SlashAbility()
     {
         animator.SetTrigger("attack");
+        SoundManager.Instance.PlaySound2D("slash_ability");
         Instantiate(slash_pfb, transform.position + new Vector3(0, -0.7f, 0), Quaternion.identity);
     }
 
     public void ShurikenAbility()
     {
+        SoundManager.Instance.PlaySound2D("shuriken_ability");
         Instantiate(shuriken_pfb, transform.position + new Vector3(0, -0.7f, 0), Quaternion.identity);
     }
 
     void ShieldAbility()
     {
+        SoundManager.Instance.PlaySound2D("shield-up_ability");
         activeShield = Instantiate(shield_pfb, transform.position + new Vector3(0, -0.4f, 0), Quaternion.identity, transform);
         activeShield.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
     }

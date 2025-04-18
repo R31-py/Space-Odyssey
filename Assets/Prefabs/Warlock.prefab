@@ -174,7 +174,7 @@ MonoBehaviour:
   moveSpeed: 0
   attackRange: 0
   triggerRange: 0
-  lifepoints: 20
+  lifepoints: 8
   dropmoney: 0
   canMove: 1
   targetInSight: 0

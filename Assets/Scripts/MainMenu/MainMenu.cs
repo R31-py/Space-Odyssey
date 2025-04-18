@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,13 +12,18 @@ public class MainMenu : MonoBehaviour
     
     public Slider musicSlider;
     public Slider sfxSlider;
-    
+
+    private void Start()
+    {
+        MusicManager.Instance.PlayMusic("background");
+    }
+
     public void StartGame()
     { 
         PlayerSaveManager.SaveLoadState.loadingFromSave = true;
         LoadVolume();
         string lastScene = PlayerPrefs.GetString("LastScene", "Level1");
-    
+        MusicManager.Instance.PlayMusic("background");
         SceneManager.LoadScene(lastScene);
     }
 

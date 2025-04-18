@@ -65,6 +65,11 @@ public class FinalBoss : Enemy
 
         audioSource.loop = true;
         animator.Play(idleState);
+
+        if (lifepoints <= 0)
+        {
+            MusicManager.Instance.PlayMusic("background");
+        }
     }
 
     protected override void Update()
@@ -212,6 +217,7 @@ public class FinalBoss : Enemy
     {
         if (other.CompareTag("Player"))
         {
+            MusicManager.Instance.PlayMusic("boss_fight");
             animator.SetBool(DetectedParam, true);
             StartAttackCycle();
             

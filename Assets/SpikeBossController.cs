@@ -49,6 +49,11 @@ public class SpikeBossController : Enemy
             transform.position.y, 
             transform.position.z
         );
+
+        if (lifepoints <= 0)
+        {
+            MusicManager.Instance.PlayMusic("background");
+        }
     }
 
     private IEnumerator JumpAttack()
@@ -107,6 +112,19 @@ public class SpikeBossController : Enemy
         {
             target.GetComponent<PlayerValues>().health -= 1;
             hitPlayer = true;
+        }
+    }
+    public override void Trigger()
+    {
+        MusicManager.Instance.PlayMusic("boss_fight");
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Player"))
+        {
+            Trigger();
+            Debug.Log($"{gameObject.name} detected the player.");
         }
     }
 }

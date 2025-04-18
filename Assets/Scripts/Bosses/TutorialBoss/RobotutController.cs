@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using System.Collections;
 using UnityEngine.SceneManagement;
@@ -207,6 +208,7 @@ public class RobotutController : Enemy
         if (lifepoints <= 0)
         {
             HandleDeath();
+            MusicManager.Instance.PlayMusic("background");
         }
         else
         {
@@ -262,6 +264,7 @@ public class RobotutController : Enemy
     {
         if (other.CompareTag("Player") && !targetInSight && !isWakingUp)
         {
+            MusicManager.Instance.PlayMusic("boss_fight");
             // Make sure we're checking the actual current state
             if (IsInAnimationState(STATE_SLEEP))
             {

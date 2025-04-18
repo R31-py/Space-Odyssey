@@ -62,6 +62,7 @@ public class PlayerValues : MonoBehaviour
             damageParticle.Play();
             Debug.Log(damageParticle);
             oldHealth = health;
+            SoundManager.Instance.PlaySound2D("player_hurt");
         }
 
         if (health <= 0 && !isDead)

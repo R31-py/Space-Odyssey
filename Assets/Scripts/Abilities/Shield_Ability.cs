@@ -8,6 +8,7 @@ public class Shield_Ability : MonoBehaviour
     {
         if (collision.CompareTag("Enemy") && collision is BoxCollider2D)
         {
+            SoundManager.Instance.PlaySound2D("shield-down_ability");
             Destroy(gameObject); 
         }
     }

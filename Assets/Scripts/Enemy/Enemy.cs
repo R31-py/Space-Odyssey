@@ -159,6 +159,7 @@ public class Enemy : MonoBehaviour, IEnemy
     public virtual void getHit(int amount)
     {
         lifepoints -= amount;
+        SoundManager.Instance.PlaySound2D("enemy_hurt");
         
         if (lifepoints <= 0)
         {

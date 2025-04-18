@@ -41,6 +41,7 @@ public class WarlockController : Enemy
         {
             canMove = false;
             Destroy(gameObject);
+            MusicManager.Instance.PlayMusic("background");
         }
     }
     
@@ -71,6 +72,7 @@ public class WarlockController : Enemy
     
     public override void Trigger()
     {
+        MusicManager.Instance.PlayMusic("boss_fight");
         playerDetected = true;
     }
 
