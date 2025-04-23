@@ -31,6 +31,10 @@ public class PlayerController : MonoBehaviour
     public float jumpHeight = 0;
     private bool secondJump = false;
     private bool isAttacking = false;
+    
+    // Invincibility-Cooldown
+    private float invCooldownTimer = 300f; 
+
 
     private void Awake()
     {
@@ -43,9 +47,21 @@ public class PlayerController : MonoBehaviour
         if (!PlayerValues.isDead)
         { 
             bool isGroundedValue = isGrounded();
-        transform.rotation = Quaternion.Euler(0, 0, 0);
+            transform.rotation = Quaternion.Euler(0, 0, 0);
 
-        horizontalInput = Input.GetAxis("Horizontal");
+            horizontalInput = Input.GetAxis("Horizontal");
+            
+            //INVINCIBILITY CHANGES
+            // Cooldown hochzählen
+            invCooldownTimer += Time.deltaTime;
+
+            // Eingabe für Unverwundbarkeit
+            if (Input.GetKeyDown(KeyCode.L) && invCooldownTimer >= 300f)
+            {
+            playerValues.ActivateInvincibility(5f);
+            invCooldownTimer = 0f;
+            }
+            // DERI KTU
         if (horizontalInput != 0)
             direction = Mathf.Sign(horizontalInput);
 

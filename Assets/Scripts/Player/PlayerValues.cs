@@ -33,6 +33,11 @@ public class PlayerValues : MonoBehaviour
     // Tutorial Variables
     [SerializeField] public int tutorialStage = 0;
     
+    // Invincibility
+    [HideInInspector] public bool isInvincible = false;
+    private SpriteRenderer spriteRenderer;
+
+    
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -49,9 +54,12 @@ public class PlayerValues : MonoBehaviour
     {
         oldHealth = health;
         animator = player.GetComponent<Animator>();
+        //INVINCIBILITY 
+        spriteRenderer = player.GetComponent<SpriteRenderer>();  // ← ktu
         Dictionary<string, object> savedData = PlayerSaveManager.LoadPlayerData();
         ApplyLoadedData(savedData);
     }
+
 
     void Update()
     {
@@ -103,5 +111,26 @@ public class PlayerValues : MonoBehaviour
         money = (int)data["Money"];
         player.transform.position = (Vector3)data["Position"];
     }
+    
+    //INVINCIBILITY CHANGES
+    public void ActivateInvincibility(float duration)
+    {
+        if (!isInvincible)
+            StartCoroutine(InvincibilityCoroutine(duration));
+    }
+
+    private IEnumerator InvincibilityCoroutine(float duration)
+    {
+        isInvincible = true;
+        // visuelles Feedback: gelbe Farbe
+        spriteRenderer.color = Color.yellow;
+
+        yield return new WaitForSeconds(duration);
+
+        // zurücksetzen
+        spriteRenderer.color = Color.white;
+        isInvincible = false;
+    }
+
     
 }
