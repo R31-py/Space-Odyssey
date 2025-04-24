@@ -16,12 +16,14 @@ public class SceneController : MonoBehaviour
 
     void Start()
     {
+        Debug.Log("Starting Scene Controller");
         StartCoroutine(InitializePlayer());
     }
 
     private IEnumerator InitializePlayer()
     {
         yield return null;
+        Debug.Log("Started Controller");
 
         player = FindObjectOfType<PlayerController>();
         
@@ -45,6 +47,8 @@ public class SceneController : MonoBehaviour
 
         Rigidbody2D rb = player.GetComponent<Rigidbody2D>();
         if (rb != null) rb.simulated = false;
+        
+       
 
         if (PlayerSaveManager.SaveLoadState.loadingFromSave)
         {
