@@ -9,6 +9,7 @@ using Object = System.Object;
 public class Enemy : MonoBehaviour, IEnemy
 {
     public GameObject target;
+    public GameObject[] objectsToDestroy;
     
     // Inactive until player is reprogrammed
     // public Values targetValues;
@@ -168,6 +169,10 @@ public class Enemy : MonoBehaviour, IEnemy
             particlesInstance.Play();
             animator.SetTrigger(deathAnimationName);
             player.money += dropmoney;
+            foreach (GameObject obj in objectsToDestroy)
+            {
+                Destroy(obj);
+            } 
             Destroy(gameObject, 1f);
         }
     }
