@@ -7,6 +7,7 @@ public class FloidLaser : MonoBehaviour
     [SerializeField] private float speed = 10f;
     [SerializeField] private float lifetime = 5f;
     public Vector2 direction;
+    
 
     private void Start()
     {

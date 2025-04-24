@@ -65,12 +65,16 @@ public class PlayerValues : MonoBehaviour
     {
         UpdateMoneyUI();
 
-        if (oldHealth > health)
+        if (oldHealth > health && !isInvincible)
         {
             damageParticle.Play();
             Debug.Log(damageParticle);
             oldHealth = health;
             SoundManager.Instance.PlaySound2D("player_hurt");
+        }
+        if(isInvincible)
+        {
+            health = oldHealth;
         }
 
         if (health <= 0 && !isDead)
@@ -79,12 +83,14 @@ public class PlayerValues : MonoBehaviour
             ParticleSystem particlesInstance = Instantiate(deathParticle, transform.position, Quaternion.identity);
             particlesInstance.Play();
             animator.Play("death");
+            Time.timeScale = 0.5f;
             deathScreen.SetActive(true);
             money = 0;
         }
 
         if (!isDead)
         {
+            Time.timeScale = 1f;
             deathScreen.SetActive(false);
         }
     }
@@ -99,10 +105,11 @@ public class PlayerValues : MonoBehaviour
 
     public IEnumerator ReloadLastSave()
     {
-        yield return new WaitForSeconds(0.5f); // Optional delay before reload
+        yield return new WaitForSeconds(0.5f);
+        isDead = false;
+        animator.Play("idle");
         Dictionary<string, object> savedData = PlayerSaveManager.LoadPlayerData();
         ApplyLoadedData(savedData);
-        PlayerValues.isDead = false;
     }
 
     public void ApplyLoadedData(Dictionary<string, object> data)

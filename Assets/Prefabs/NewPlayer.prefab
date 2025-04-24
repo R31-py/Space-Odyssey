@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 1774962214292625629}
   - component: {fileID: 1063161036798993009}
   - component: {fileID: 6043811732653226290}
+  - component: {fileID: 2429769453935893256}
   m_Layer: 0
   m_Name: NewPlayer
   m_TagString: Player
@@ -188,6 +189,7 @@ MonoBehaviour:
   shuriken_pfb: {fileID: 0}
   shield_pfb: {fileID: 0}
   body: {fileID: 1774962214292625629}
+  jumpHeight: 0
 --- !u!114 &6043811732653226290
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -203,8 +205,10 @@ MonoBehaviour:
   health: 3
   maxHealth: 3
   player: {fileID: 271694726270871207}
+  deathScreen: {fileID: 0}
   damageParticle: {fileID: 0}
-  money: 100
+  deathParticle: {fileID: 0}
+  money: 155
   moneyText: {fileID: 0}
   RIGHT: 275
   LEFT: 276
@@ -228,6 +232,19 @@ MonoBehaviour:
     quantity: 0
     cooldown: 0
   tutorialStage: 10
+  isInvincible: 0
+--- !u!114 &2429769453935893256
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 271694726270871207}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f2a11415695919e4ab932fd2d9d42984, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &973768292079324279
 GameObject:
   m_ObjectHideFlags: 0
