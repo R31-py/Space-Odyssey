@@ -25,6 +25,13 @@ public class MainMenu : MonoBehaviour
     {
         StartCoroutine(StartGame());
     }
+    
+    public void OnNewGameButtonClicked()
+    {
+        PlayerPrefs.DeleteAll();
+        PlayerPrefs.Save();
+        StartCoroutine(StartGame());
+    }
 
 
     public IEnumerator StartGame()
