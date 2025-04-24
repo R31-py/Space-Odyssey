@@ -528,5 +528,5 @@ MonoBehaviour:
   - attack
   - attack2
   showDebugLogs: 1
-  explosionPrefab: {fileID: 0}
+  explosionPrefab: {fileID: 7518801433158672266, guid: a98e9cbd4a17f0d459f43da60798a66f, type: 3}
   explosionDuration: 0.5

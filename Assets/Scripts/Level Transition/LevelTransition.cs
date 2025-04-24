@@ -1,5 +1,7 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class LevelTransition : MonoBehaviour
 {
@@ -9,48 +11,71 @@ public class LevelTransition : MonoBehaviour
     [Tooltip("Check this if the transition requires a key press (e.g., door or spaceship).")]
     public bool requireKeyPress = false;
 
+    [Tooltip("Assign a loading screen prefab here.")]
+    public GameObject loadingScreen;
+
+    [Tooltip("Optional: Link a progress bar here.")]
+    public Slider progressBar;
+
     private bool playerInRange = false;
+    private bool isLoading = false;
 
     void Update()
     {
-        // For transitions that require the player to press T
-        if (requireKeyPress && playerInRange)
+        if (requireKeyPress && playerInRange && !isLoading)
         {
             if (Input.GetKeyDown(KeyCode.T))
             {
-                TransitionToNextLevel();
+                StartCoroutine(TransitionToNextLevel());
             }
         }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        // Check if the colliding object is the player.
-        if (collision.CompareTag("Player"))
+        if (collision.CompareTag("Player") && !isLoading)
         {
             playerInRange = true;
 
-            // If no key press is required, transition immediately.
             if (!requireKeyPress)
             {
-                TransitionToNextLevel();
+                StartCoroutine(TransitionToNextLevel());
             }
         }
     }
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        // Reset the flag when the player leaves the trigger area.
         if (collision.CompareTag("Player"))
         {
             playerInRange = false;
         }
     }
 
-    private void TransitionToNextLevel()
+    private IEnumerator TransitionToNextLevel()
     {
-        // Optionally, you can add any transition effects here (fade out, sound, etc.)
+        isLoading = true;
         PlayerSaveManager.SaveLoadState.loadingFromSave = false;
-        SceneManager.LoadScene(sceneToLoad);
+
+        if (loadingScreen != null) loadingScreen.SetActive(true);
+
+        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneToLoad);
+        asyncLoad.allowSceneActivation = false;
+
+        while (!asyncLoad.isDone)
+        {
+            float progress = Mathf.Clamp01(asyncLoad.progress / 0.9f);
+
+            if (progressBar != null)
+                progressBar.value = progress;
+
+            if (asyncLoad.progress >= 0.9f)
+            {
+                yield return new WaitForSeconds(0.5f);
+                asyncLoad.allowSceneActivation = true;
+            }
+
+            yield return null;
+        }
     }
 }
