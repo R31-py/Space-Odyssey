@@ -562,7 +562,7 @@ MonoBehaviour:
   deathShakeIntensity: 1
   deathTimer: 3
   floidLaser: {fileID: 3282692092682380400, guid: 12cffdef5f0c07e479edaadb33710f00, type: 3}
-  attackCooldown: 1.5
+  attackCooldown: 3
 --- !u!58 &3793648876409565464
 CircleCollider2D:
   m_ObjectHideFlags: 0

@@ -6,7 +6,7 @@ public class FloidController : Enemy
 {
     [SerializeField] private float deathTimer = 3f;
     [SerializeField] private GameObject floidLaser;
-    [SerializeField] private float attackCooldown = 1.5f;
+    [SerializeField] private float attackCooldown = 3f;
     private Vector3 firePoint ;
     private float attackTimer = 0f;
     private int movingDirection = 1;
@@ -55,6 +55,7 @@ public class FloidController : Enemy
         Vector2 direction = (playerTransform.position - firePoint).normalized;
         GameObject laser = Instantiate(floidLaser, firePoint, Quaternion.identity);
         laser.SetActive(true);
+        laser.GetComponent<FloidLaser>().direction = direction;
         Rigidbody2D laserRb = laser.GetComponent<Rigidbody2D>();
         laserRb.velocity = direction * 10f;
         

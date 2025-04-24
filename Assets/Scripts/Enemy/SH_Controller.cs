@@ -44,6 +44,13 @@ public class SH_Controller : Enemy
                 attackTimer = attackCooldown;
             }
         }
+        
+        if (lifepoints <= 0)
+        {
+            animator.SetTrigger(deathAnimationName);
+            canMove = false;
+            Destroy(gameObject);
+        }
     }
 
     public override void Attack()

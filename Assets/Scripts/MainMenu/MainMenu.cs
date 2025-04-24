@@ -15,7 +15,7 @@ public class MainMenu : MonoBehaviour
 
     private void Start()
     {
-        MusicManager.Instance.PlayMusic("background");
+        MusicManager.Instance.PlayMusic("Main Menu");
     }
 
     public void StartGame()

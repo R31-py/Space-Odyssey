@@ -6,6 +6,7 @@ public class FloidLaser : MonoBehaviour
 {
     [SerializeField] private float speed = 10f;
     [SerializeField] private float lifetime = 5f;
+    public Vector2 direction;
 
     private void Start()
     {
@@ -14,7 +15,7 @@ public class FloidLaser : MonoBehaviour
 
     private void Update()
     {
-        transform.Translate(Vector2.right * (speed * Time.deltaTime)); 
+        transform.Translate(direction * (speed * Time.deltaTime)); 
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -28,7 +29,7 @@ public class FloidLaser : MonoBehaviour
             }
             Destroy(gameObject); 
         }
-        else if (collision.CompareTag("Wall"))
+        else if (collision.CompareTag("Ground"))
         {
             Destroy(gameObject); 
         }

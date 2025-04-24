@@ -368,10 +368,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tracks:
-  - trackName: background
+  - trackName: Main Menu
     clip: {fileID: 8300000, guid: b384081ea1661e54ca7faac724d2fa2a, type: 3}
   - trackName: boss_fight
     clip: {fileID: 8300000, guid: cf1c6632e2360c2439d9dddca3cca6bc, type: 3}
+  - trackName: background
+    clip: {fileID: 8300000, guid: 8f18cdc676660e54b92166d436ee9b08, type: 3}
 --- !u!114 &3477207458822160203
 MonoBehaviour:
   m_ObjectHideFlags: 0
