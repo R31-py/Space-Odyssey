@@ -500,7 +500,7 @@ MonoBehaviour:
   attackRange: 0
   triggerRange: 0
   lifepoints: 0
-  dropmoney: 0
+  dropmoney: 15
   canMove: 1
   targetInSight: 0
   body: {fileID: 0}
@@ -524,4 +524,9 @@ MonoBehaviour:
   maxDirectionAngle: 30
   isShooting: 0
   playerAttackDamage: 1
+  playerAttackAnimationStates:
+  - attack
+  - attack2
   showDebugLogs: 1
+  explosionPrefab: {fileID: 0}
+  explosionDuration: 0.5

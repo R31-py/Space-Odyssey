@@ -6,11 +6,13 @@ using UnityEngine.SceneManagement;
 
 public class DeathScreen : MonoBehaviour
 {
-    public PlayerValues playerValues;
+    private PlayerValues playerValues;
+    public SceneController sceneController;
     private void Start()
     {
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
+        playerValues = sceneController.player.gameObject.GetComponent<PlayerValues>();
     }
 
     public void RestartGame()

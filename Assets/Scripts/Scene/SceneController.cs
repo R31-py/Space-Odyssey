@@ -35,7 +35,6 @@ public class SceneController : MonoBehaviour
 
         PlayerValues playerValues = player.GetComponent<PlayerValues>();
         PlayerSaveManager saveManager = player.GetComponent<PlayerSaveManager>();
-        deathScreen.playerValues = playerValues;
         cameraController.player = player.gameObject.transform;
 
         if (playerValues == null || saveManager == null)
