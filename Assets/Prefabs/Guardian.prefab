@@ -171,6 +171,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 271694726270871207, guid: c873e68e8ac2fee408a47362749c6579, type: 3}
+  objectsToDestroy: []
   moveSpeed: 1
   attackRange: 3
   triggerRange: 6
@@ -195,7 +196,6 @@ MonoBehaviour:
   hitShakeIntensity: 0.5
   deathShakeIntensity: 1
   attackCooldown: 1.5
-  player: {fileID: 6043811732653226290, guid: c873e68e8ac2fee408a47362749c6579, type: 3}
 --- !u!58 &4957456940793227935
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -209,9 +209,9 @@ CircleCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -1.0383383, y: 0}
+  m_Offset: {x: -5.436554, y: 0}
   serializedVersion: 2
-  m_Radius: 10.030929
+  m_Radius: 14.429143
 --- !u!1 &8879884156566953099
 GameObject:
   m_ObjectHideFlags: 0

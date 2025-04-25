@@ -6,12 +6,24 @@ using UnityEngine;
 public class GuardianController : Enemy
 {
     [SerializeField] private float attackCooldown = 1.5f;
-    [SerializeField] public PlayerValues player;
+    private PlayerValues player;
 
     private bool isAttacking = false;
     private bool playerDetected = false;
     private int movingDirection = 1;
     private float currentHitCooldown = 0f;
+    
+    private void Awake()
+    {
+        if (player == null)
+        {
+            GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
+            if (playerObj != null)
+            {
+                player = playerObj.GetComponent<PlayerValues>();
+            }
+        }
+    }
     
 
     private void Update()
@@ -27,33 +39,35 @@ public class GuardianController : Enemy
         {
             canMove = true;
         }
-        
+    
         if (canMove)
         {
             Move(-movingDirection);
             animator.SetBool(moveAnimationName, true);
         }
 
-        if (isAttacking) return;
-
-        float distanceToPlayer = Vector2.Distance(transform.position, target.transform.position);
-        if (distanceToPlayer <= attackRange)
-        {
-            StartAttacking();
-        }
-        
+        // Update cooldown over time
         if (currentHitCooldown < attackCooldown)
         {
             currentHitCooldown += Time.deltaTime;
+        }
+
+        // Check if the enemy is in range and ready to attack
+        float distanceToPlayer = Vector2.Distance(transform.position, target.transform.position);
+        if (distanceToPlayer <= attackRange && currentHitCooldown >= attackCooldown && !isAttacking)
+        {
+            StartAttacking();
         }
     }
 
     private void StartAttacking()
     {
         isAttacking = true;
-        canMove = false; 
+        canMove = false;
         animator.SetBool(moveAnimationName, false);
         animator.SetTrigger(attackAnimationName);
+
+        // Optional: You can call ResetAttackState if you need the cooldown to restart
         StartCoroutine(ResetAttackState());
     }
 
@@ -66,9 +80,12 @@ public class GuardianController : Enemy
 
     public override void Trigger()
     {
-        playerDetected = true;
-        canMove = true;
-        Debug.Log("Guardian detected Player!");
+        if (!playerDetected) // Only trigger once
+        {
+            playerDetected = true;
+            canMove = true;
+            Debug.Log("Guardian detected Player!");
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -76,6 +93,11 @@ public class GuardianController : Enemy
         if (collision.CompareTag("Player"))
         {
             Trigger();
+            if (player == null)
+            {
+                player = collision.GetComponent<PlayerValues>();
+            }
+            Debug.Log("Chamel detected Player!");
         }
     }
     
@@ -83,9 +105,14 @@ public class GuardianController : Enemy
     {
         if (other.gameObject.CompareTag("Player") && currentHitCooldown >= attackCooldown)
         {
-            Debug.Log(currentHitCooldown);
+            if (player == null)
+            {
+                player = other.gameObject.GetComponent<PlayerValues>();
+            }
+
             player.health -= 1;
-            currentHitCooldown = 0f;
+            currentHitCooldown = 0f; // Reset cooldown after attack
+            Debug.Log("Guardian damaged the player!");
         }
     }
 

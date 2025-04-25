@@ -8,14 +8,13 @@ public class ChamelController : Enemy
     [SerializeField] private float attackCooldown = 1.5f;
     [SerializeField] private float dashSpeed = 6f;
     [SerializeField] private float dashDuration = 0.2f;
-    [SerializeField] public PlayerValues player;
+    private PlayerValues player;
 
     private float attackTimer = 0f;
     private int movingDirection = 1;
     private bool playerDetected = false;
     private bool isCharging = false;
     private float currentHitCooldown = 0f;
-
     
     private Transform playerTransform;
     private Rigidbody2D body;
@@ -25,14 +24,27 @@ public class ChamelController : Enemy
     {
         body = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
-        if (movingDirection == 0) movingDirection = 1;
-        playerTransform = target.transform;
+
+        if (player == null)
+        {
+            GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
+            if (playerObj != null)
+            {
+                player = playerObj.GetComponent<PlayerValues>();
+            }
+        }
+
+        playerTransform = player?.transform;
     }
 
     private void Update()
     {
-        
         if (isCharging) return; 
+        
+        if (currentHitCooldown < attackCooldown)
+        {
+            currentHitCooldown += Time.deltaTime;
+        }
 
         if (canMove)
         {
@@ -50,6 +62,10 @@ public class ChamelController : Enemy
 
         if (lifepoints <= 0)
         {
+            if (player != null)
+            {
+                player.money += dropmoney; 
+            }
             animator.SetTrigger(deathAnimationName);
             canMove = false;
             Destroy(gameObject);
@@ -86,17 +102,26 @@ public class ChamelController : Enemy
         if (collision.CompareTag("Player"))
         {
             Trigger();
+            if (player == null)
+            {
+                player = collision.GetComponent<PlayerValues>();
+            }
             Debug.Log("Chamel detected Player!");
         }
     }
 
     private void OnCollisionStay2D(Collision2D other)
     {
-        if (other.gameObject.CompareTag("Player") && attackTimer <= 0)
+        if (other.gameObject.CompareTag("Player") && currentHitCooldown >= attackCooldown)
         {
-            Debug.Log(currentHitCooldown);
+            if (player == null)
+            {
+                player = other.gameObject.GetComponent<PlayerValues>();
+            }
+
             player.health -= 1;
-            attackTimer = attackCooldown;
+            currentHitCooldown = 0f;
+            Debug.Log("Chamel damaged the player!");
         }
 
         if (other.gameObject.CompareTag("Wall"))

@@ -6,20 +6,29 @@ public class Peyeramid : Enemy
 {
     [SerializeField] private float speed = 3f;
     [SerializeField] private float height = 3f;
-    [SerializeField] public PlayerValues player;
+    [SerializeField] private float hitCooldown = 1f;
+    private float currentHitCooldown = 0f;
+    private PlayerValues player;
     private Vector3 startPos;
 
     private void Awake()
     {
         body = GetComponent<Rigidbody2D>();
+        player = target.GetComponent<PlayerValues>();
         startPos = transform.position;
     }
 
     private void Update()
     {
+        
         if (canMove)
         {
             Move(0); // Direction is unused, but needed for compatibility
+        }
+        
+        if (currentHitCooldown < hitCooldown)
+        {
+            currentHitCooldown += Time.deltaTime;
         }
 
         if (lifepoints <= 0)
@@ -35,13 +44,22 @@ public class Peyeramid : Enemy
         transform.position = new Vector3(startPos.x, newY, startPos.z); // Keep original X/Z, move only Y
     }
 
-    private void OnCollisionStay2D(Collision2D other)
+    private void OnCollisionEnter2D(Collision2D other)
     {
+        Debug.Log("Collision detected with: " + other.gameObject.name);
         if (other.gameObject.CompareTag("Player"))
         {
-            player.health -= 1;
+            if (player == null)
+            {
+                player = other.gameObject.GetComponent<PlayerValues>();
+            }
+
+            if (currentHitCooldown >= hitCooldown)
+            {
+                player.health -= 1;
+                currentHitCooldown = 0f;
+            }
         }
     }
-    
     
 }
