@@ -19,7 +19,6 @@ public class Shuriken_Ability : MonoBehaviour
         direction = player.transform.localScale.x;
         
     }
-
     private void Update()
     {
         transform.position += Vector3.right * (direction * speed * Time.deltaTime);

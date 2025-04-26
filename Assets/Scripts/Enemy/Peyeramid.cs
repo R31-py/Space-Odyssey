@@ -9,13 +9,20 @@ public class Peyeramid : Enemy
     [SerializeField] private float hitCooldown = 1f;
     private float currentHitCooldown = 0f;
     private PlayerValues player;
+    private Rigidbody2D body;
     private Vector3 startPos;
 
     private void Awake()
     {
-        body = GetComponent<Rigidbody2D>();
-        player = target.GetComponent<PlayerValues>();
         startPos = transform.position;
+        if (player == null)
+        {
+            GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
+            if (playerObj != null)
+            {
+                player = playerObj.GetComponent<PlayerValues>();
+            }
+        }
     }
 
     private void Update()
@@ -29,7 +36,7 @@ public class Peyeramid : Enemy
         if (currentHitCooldown < hitCooldown)
         {
             currentHitCooldown += Time.deltaTime;
-        }
+        }    
 
         if (lifepoints <= 0)
         {
