@@ -33,6 +33,7 @@ public class FloidController : Enemy
             attackTimer -= Time.deltaTime;
             if (attackTimer <= 0)
             {
+                FacePlayer();
                 Attack();
                 attackTimer = attackCooldown;
             }
@@ -49,17 +50,41 @@ public class FloidController : Enemy
     public override void Attack()
     {
         if (playerTransform == null) return;
-        
+
         firePoint = transform.position + new Vector3(0, 0.8f, 0);
-        
+
         Vector2 direction = (playerTransform.position - firePoint).normalized;
+
         GameObject laser = Instantiate(floidLaser, firePoint, Quaternion.identity);
+
         laser.GetComponent<FloidLaser>().direction = direction;
+
+        // Rotate the laser to face the player
+        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+        laser.transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
+
         laser.SetActive(true);
-        
+
         animator.SetTrigger(attackAnimationName);
-        Debug.Log("Floid attacked!");
+        Debug.Log("Floid attacked! Direction: " + direction);
     }
+    
+    private void FacePlayer()
+    {
+        if (playerTransform == null) return;
+
+        SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
+
+        if (playerTransform.position.x > transform.position.x)
+        {
+            spriteRenderer.flipX = true; 
+        }
+        else
+        {
+            spriteRenderer.flipX = false; 
+        }
+    }
+
 
     public override void Trigger()
     {
@@ -72,6 +97,7 @@ public class FloidController : Enemy
         {
             Trigger();
             Debug.Log("Floid detected Player!");
+            FacePlayer();
         }
     }
     

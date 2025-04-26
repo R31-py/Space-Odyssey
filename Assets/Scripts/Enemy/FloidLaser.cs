@@ -16,7 +16,7 @@ public class FloidLaser : MonoBehaviour
 
     private void Update()
     {
-        transform.Translate(direction * (speed * Time.deltaTime)); 
+        transform.Translate(Vector3.right * speed * Time.deltaTime, Space.Self);//Space.Self=>relative to the laser; makes it move along whatever X
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

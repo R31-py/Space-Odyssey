@@ -98,6 +98,19 @@ public class GuardianController : Enemy
                 player = collision.GetComponent<PlayerValues>();
             }
             Debug.Log("Chamel detected Player!");
+
+            SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
+
+            if (collision.transform.position.x > transform.position.x)
+            {
+                spriteRenderer.flipX = true;  
+                movingDirection = -1;          
+            }
+            else
+            {
+                spriteRenderer.flipX = false;   
+                movingDirection = 1;           
+            }
         }
     }
     
